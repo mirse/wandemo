@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:wandemo/page/home_page.dart';
+import 'package:wandemo/page/my_page.dart';
+import 'package:wandemo/page/project_page.dart';
+import 'package:wandemo/page/sort_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +16,7 @@ void main() {
     SystemChrome.setSystemUIOverlayStyle(systemUi);
   }
 }
+var curIndex = 0;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -23,41 +28,108 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: MainPage(),
+      // routes:{
+      //   '/home':(BuildContext context) => HomePage(),
+      //   '/project':(BuildContext context) => ProjectPage(),
+      //   '/sort':(BuildContext context) => SortPage(),
+      //   '/my':(BuildContext context) => MyPage(),
+      // },
+
+
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return MainState();
+  }
+}
+
+class MainState extends State<MainPage>{
+
+  var allPages=[HomePage(),ProjectPage(),SortPage(),MyPage()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbar,
       drawer: _drawer,
+      bottomNavigationBar: _bottomNavigationBar,
+      body: allPages[curIndex],
     );
   }
 
   get _appbar => AppBar(
-        //私有方法
-        title: const Text('wan android'),
-      );
+    //私有方法
+    title: const Text('wan android'),
+  );
 
   get _drawer => Drawer(child:
-    ListView(
-      padding: EdgeInsets.zero,// 此处能解决顶部为灰色的问题
-      children: [
-        _drawerHeader,
-        ListTitle('首页',Icons.home),
-        ListTitle('项目',Icons.local_fire_department),
-        ListTitle('分类',Icons.category_outlined),
-        ListTitle('我的',Icons.person),
-      ],
-    )
+  ListView(
+    padding: EdgeInsets.zero,// 此处能解决顶部为灰色的问题
+    children: [
+      _drawerHeader,
+      ListTile(
+          textColor: curIndex==0?Colors.blueAccent:Colors.grey,
+          iconColor: curIndex==0?Colors.blueAccent:Colors.grey,
+          title: Text('首页'),
+          leading:Icon(Icons.home),
+          onTap: (){
+            Navigator.of(context).pop();
+            setState(() {
+              curIndex = 0;
+            });
+          },
+      ),
+      Divider(),
+      ListTile(
+        textColor: curIndex==1?Colors.blueAccent:Colors.grey,
+        iconColor: curIndex==1?Colors.blueAccent:Colors.grey,
+        title: Text('项目'),
+        leading:Icon(Icons.local_fire_department),
+        onTap: (){
+          Navigator.of(context).pop();
+          setState(() {
+            curIndex = 1;
+          });
+        },
+      ),
+      Divider(),
+      ListTile(
+        textColor: curIndex==2?Colors.blueAccent:Colors.grey,
+        iconColor: curIndex==2?Colors.blueAccent:Colors.grey,
+        title: Text('分类'),
+        leading:Icon(Icons.category_outlined),
+        onTap: (){
+          Navigator.of(context).pop();
+          setState(() {
+            curIndex = 2;
+          });
+        },
+      ),
+      Divider(),
+      ListTile(
+        textColor: curIndex==3?Colors.blueAccent:Colors.grey,
+        iconColor: curIndex==3?Colors.blueAccent:Colors.grey,
+        title: Text('我的'),
+        leading:Icon(Icons.person),
+        onTap: (){
+          Navigator.of(context).pop();
+          setState(() {
+            curIndex = 3;
+          });
+        },
+      )
+    ],
+  )
   );
 
   get _drawerHeader => DrawerHeader(
     decoration: BoxDecoration(
-      color: Colors.blueAccent,
+      color: Colors.blueAccent, //设置顶部背景颜色或图片
     ),
     padding: EdgeInsets.all(0),// 此处能解决DrawerHeader为灰色的问题
     child: GestureDetector(//点击事件
@@ -86,32 +158,26 @@ class HomePage extends StatelessWidget {
       onTap: ()=>print('click header'),
     ),
   );
-}
 
-class ListTitle extends StatelessWidget {
-  final String name;
-  final IconData icon;
-  ListTitle(this.name, this.icon);
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 15),
-            child:
-            ListTile(
-              leading: Icon(icon),
-              title: Text(name),
-            ),
-          ),
-          Divider(),
-        ],
-      ),
-      onTap: ()=>print(''),
-    );
-  }
+  get _bottomNavigationBar => BottomNavigationBar(
+    currentIndex: curIndex,
+    unselectedItemColor: Colors.grey,
+    selectedItemColor: Colors.blue,
+    type: BottomNavigationBarType.fixed,
+    items: [
+      BottomNavigationBarItem(icon: Icon(Icons.home),label: '首页'),
+      BottomNavigationBarItem(icon: Icon(Icons.local_fire_department),label: '项目'),
+      BottomNavigationBarItem(icon: Icon(Icons.category_outlined),label: '分类'),
+      BottomNavigationBarItem(icon: Icon(Icons.person),label: '我的'),
+    ],
+    onTap: (index){
+      setState(() {
+        print("the index is :$index");
+        curIndex=index;
+      });
 
+    },
+  );
 
 }
 
