@@ -6,31 +6,29 @@ import 'package:wandemo/model/hotkey_model.dart' as hotkey;
 
 import '../model/article_model.dart' as article;
 
-
-
 class HomePage extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return HomeState();
   }
-
 }
 
-class HomeState extends State{
+class HomeState extends State<HomePage> {
   late List<banner.Data> httpImg = [];
   late List<article.Datas> articleList = [];
-
+  int _articlePage = 0;
+  ScrollController _controller = ScrollController();
   var homeKeyMap = {
-    '面试':'assets/imgs/icon_iv.png',
-    '大厂分享':'assets/imgs/icon_big.png',
-    '性能优化':'assets/imgs/icon_op.png',
-    '官方发布':'assets/imgs/icon_daily.png',
-    'Jetpack':'assets/imgs/icon_jetpack.png',
-    '开源库源码':'assets/imgs/icon_open.png',
-    'Framework':'assets/imgs/icon_framework.png',
-    'Kotlin':'assets/imgs/icon_kotlin.png',
+    '面试': 'assets/imgs/icon_iv.png',
+    '大厂分享': 'assets/imgs/icon_big.png',
+    '性能优化': 'assets/imgs/icon_op.png',
+    '官方发布': 'assets/imgs/icon_daily.png',
+    'Jetpack': 'assets/imgs/icon_jetpack.png',
+    '开源库源码': 'assets/imgs/icon_open.png',
+    'Framework': 'assets/imgs/icon_framework.png',
+    'Kotlin': 'assets/imgs/icon_kotlin.png',
   };
+
   // var homeKeyList = ['面试','大厂分享','性能优化','官方发布','Jetpack','开源库源码','Framework','Kotlin'];
 
   @override
@@ -48,53 +46,70 @@ class HomeState extends State{
       });
     });
 
-    getArticle().then((List<article.Datas> value) {
+    _getArticle(_articlePage);
+
+    _controller.addListener(() {
+      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+        _articlePage++;
+        _getArticle(_articlePage);
+      }
+    });
+  }
+
+  void _getArticle(int page) {
+    getArticle(page).then((List<article.Datas> value) {
       setState(() {
-        articleList = value;
+        articleList.addAll(value);
+        print("initState-----------${articleList.length}");
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context,index){
-      if(index == 0){
-        return Container(
-          height: 200,
-          child: Swiper(
-              key: UniqueKey(), //dart ScrollController not attached to any scroll views.
-              pagination: SwiperPagination(),//如果不填则不显示指示点
-              itemCount: httpImg.length,
-              itemBuilder:((context,index){
-                return Image.network(httpImg[index].imagePath);
-              })
-          ),
-        );
-      }
-      else if(index == 1){
-        return Container(
-          height: 200,
-          child: GridView.count(
-            physics: NeverScrollableScrollPhysics(),// 禁用滑动事件,
-            crossAxisCount: 4,
-            children: getGridChild(),
-          ),
-        );
-      }
-      else{
-        return getListItem(articleList[index-2]);
-      }
-    });
+    return ListView.builder(
+        controller: _controller,
+        itemCount: articleList.length+2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Container(
+              height: 200,
+              child: Swiper(
+                  key: UniqueKey(),
+                  //解决 dart ScrollController not attached to any scroll views.
+                  pagination: SwiperPagination(),
+                  //如果不填则不显示指示点
+                  itemCount: httpImg.length,
+                  itemBuilder: ((context, index) {
+                    return Image.network(httpImg[index].imagePath);
+                  })),
+            );
+          } else if (index == 1) {
+            return Container(
+              height: 200,
+              child: GridView.count(
+                physics: NeverScrollableScrollPhysics(), // 禁用滑动事件,
+                crossAxisCount: 4,
+                children: getGridChild(),
+              ),
+            );
+          } else {
+            return getListItem(articleList[index - 2]);
+          }
+        });
   }
 
-  Widget getListItem(article.Datas data){
+  Widget getListItem(article.Datas data) {
     return Container(
-      margin: EdgeInsets.only(left: 10,right: 10),
+      margin: EdgeInsets.only(left: 10, right: 10),
       child: Column(
         children: [
           Container(
             alignment: Alignment.topLeft,
-            child: Text(data.title,style: TextStyle(fontWeight: FontWeight.w500 ),),
+            child: Text(
+              data.title,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
@@ -102,8 +117,7 @@ class HomeState extends State{
               children: [
                 Container(
                   alignment: Alignment.center,
-                  height:25,
-                  width: 40,
+                  padding: EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     //背景
                     color: Colors.white,
@@ -112,20 +126,24 @@ class HomeState extends State{
                     //设置四周边框
                     border: new Border.all(width: 1, color: Colors.blueAccent),
                   ),
-                  child: Text(data.chapterName,style: TextStyle(color: Colors.blueAccent,),),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Icon(
-                    data.collect?Icons.favorite:Icons.favorite_border,
-                    color: data.collect?Colors.red:Colors.grey,
+                  child: Text(
+                    data.chapterName,
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                    ),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 10),
-                  child:Text(data.shareUser),
+                  child: Icon(
+                    data.collect ? Icons.favorite : Icons.favorite_border,
+                    color: data.collect ? Colors.red : Colors.grey,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Text(data.shareUser),
                 )
-
               ],
             ),
           ),
@@ -135,25 +153,28 @@ class HomeState extends State{
     );
   }
 
-  Future<List<banner.Data>> getBanner() async{
-    Response response = await Dio().get('https://www.wanandroid.com/banner/json');
+  Future<List<banner.Data>> getBanner() async {
+    Response response =
+        await Dio().get('https://www.wanandroid.com/banner/json');
     var bannerModel = banner.BannerModel.fromJson(response.data);
     return bannerModel.datas;
   }
 
-  Future<List<hotkey.Data>> getHotkey() async{
-    Response response = await Dio().get('https://www.wanandroid.com//hotkey/json');
+  Future<List<hotkey.Data>> getHotkey() async {
+    Response response =
+        await Dio().get('https://www.wanandroid.com//hotkey/json');
     var hotkeyModel = hotkey.HotkeyModel.fromJson(response.data);
     return hotkeyModel.data;
   }
 
-  Future<List<article.Datas>> getArticle() async{
-    Response response = await Dio().get('https://www.wanandroid.com/article/list/0/json');
+  Future<List<article.Datas>> getArticle(int page) async {
+    Response response =
+        await Dio().get('https://www.wanandroid.com/article/list/$page/json');
     var articleModel = article.ArticleModel.fromJson(response.data);
     return articleModel.data.datas;
   }
 
-  List<Widget> getGridChild(){
+  List<Widget> getGridChild() {
     List<Widget> widgetList = [];
     homeKeyMap.forEach((key, value) {
       widgetList.add(getGridItem(key, value));
@@ -161,18 +182,20 @@ class HomeState extends State{
     return widgetList;
   }
 
-  Widget getGridItem(String name,String iconPath) {
+  Widget getGridItem(String name, String iconPath) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          Image.asset(iconPath,height: 40,width: 40,),
-          Container(
-            child:Text(name) ,
-          )
-        ],
-      )
-    );
+        margin: EdgeInsets.only(top: 20),
+        child: Column(
+          children: [
+            Image.asset(
+              iconPath,
+              height: 40,
+              width: 40,
+            ),
+            Container(
+              child: Text(name),
+            )
+          ],
+        ));
   }
-
 }
