@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/model/banner_model.dart' as banner;
 import 'package:wandemo/model/hotkey_model.dart' as hotkey;
+import 'package:wandemo/utils/constant.dart';
 
 import '../model/article_model.dart' as article;
 
@@ -14,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomeState extends State<HomePage> {
-  late List<banner.Data> httpImg = [];
+  late List<banner.BannerModel> httpImg = [];
   late List<article.Datas> articleList = [];
   int _articlePage = 0;
   ScrollController _controller = ScrollController();
@@ -34,7 +36,13 @@ class HomeState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getBanner().then((List<banner.Data> value) {
+    // HttpManager().getBanner<banner.BannerModel>(success:(data){
+    //   var bannerModel = banner.BannerModel.fromJson(data);
+    //   return bannerModel.datas;
+    // },fail: (errorCode,msg){
+    //
+    // });
+    getBanner().then((List<banner.BannerModel> value) {
       setState(() {
         httpImg = value;
       });
@@ -153,11 +161,14 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Future<List<banner.Data>> getBanner() async {
+  Future<List<banner.BannerModel>> getBanner() async {
     Response response =
         await Dio().get('https://www.wanandroid.com/banner/json');
-    var bannerModel = banner.BannerModel.fromJson(response.data);
-    return bannerModel.datas;
+    List list = response.data['data'];
+    List<banner.BannerModel> bannerList = list.map((e){
+      banner.BannerModel.fromJson(e);
+    }).cast<banner.BannerModel>().toList();
+    return bannerList;
   }
 
   Future<List<hotkey.Data>> getHotkey() async {

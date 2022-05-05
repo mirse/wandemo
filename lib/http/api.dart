@@ -1,4 +1,4 @@
 class Apis{
-  static const String BASE_URL = 'https://www.wanandroid.com/';
-  static const String banner = 'https://www.wanandroid.com/banner/json';
+  static const String URL_BASE = 'https://www.wanandroid.com/';
+  static const String URL_BANNER = 'banner/json';
 }

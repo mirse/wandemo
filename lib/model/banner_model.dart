@@ -37,29 +37,6 @@
     }
  */
 class BannerModel{
-  final int errorCode;
-  final String errorMsg;
-  final List<Data> datas;
-
-  BannerModel({required this.errorCode, required this.errorMsg,required this.datas});
-
-  factory BannerModel.fromJson(Map<String, dynamic> parsedJson){
-    var list = parsedJson['data'] as List;
-    List<Data> dataList = list.map((i) => Data.fromJson(i)).toList();
-    return BannerModel(
-        errorCode: parsedJson['errorCode'],
-        errorMsg: parsedJson['errorMsg'],
-        datas: dataList
-    );
-  }
-
-  @override
-  String toString() {
-    return 'BannerModel{errorCode: $errorCode, errorMsg: $errorMsg, datas: $datas}';
-  }
-}
-
-class Data{
   final String desc;
   final String imagePath;
   final String title;
@@ -69,19 +46,19 @@ class Data{
   final int order;
   final int type;
 
-  Data({required this.desc,required this.imagePath,required this.title,required this.url,required this.id,required this.isVisible,
+  BannerModel({required this.desc,required this.imagePath,required this.title,required this.url,required this.id,required this.isVisible,
     required this.order,required this.type});
 
-  factory Data.fromJson(Map<String, dynamic> parsedJson){
-    return Data(
-        desc: parsedJson['desc'],
-        imagePath: parsedJson['imagePath'],
-        title: parsedJson['title'],
-        url: parsedJson['url'],
-        id: parsedJson['id'],
-        isVisible: parsedJson['isVisible'],
-        order: parsedJson['order'],
-        type: parsedJson['type'],
+  factory BannerModel.fromJson(Map<String, dynamic> parsedJson){
+    return BannerModel(
+      desc: parsedJson['desc'],
+      imagePath: parsedJson['imagePath'],
+      title: parsedJson['title'],
+      url: parsedJson['url'],
+      id: parsedJson['id'],
+      isVisible: parsedJson['isVisible'],
+      order: parsedJson['order'],
+      type: parsedJson['type'],
     );
   }
 
