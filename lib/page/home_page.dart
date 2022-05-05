@@ -165,9 +165,14 @@ class HomeState extends State<HomePage> {
     Response response =
         await Dio().get('https://www.wanandroid.com/banner/json');
     List list = response.data['data'];
-    List<banner.BannerModel> bannerList = list.map((e){
-      banner.BannerModel.fromJson(e);
-    }).cast<banner.BannerModel>().toList();
+    List<banner.BannerModel> bannerList=[];
+    for(int i =0;i<list.length;i++){
+      banner.BannerModel bannerModel = banner.BannerModel.fromJson(list[i]);
+      bannerList.add(bannerModel);
+    }
+    // List<banner.BannerModel> bannerList = list.map((e){
+    //   banner.BannerModel.fromJson(e);
+    // }).toList();
     return bannerList;
   }
 

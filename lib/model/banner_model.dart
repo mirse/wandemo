@@ -36,35 +36,49 @@
     "errorMsg": ""
     }
  */
+import 'package:json_annotation/json_annotation.dart';
+
+part 'banner_model.g.dart';
+
+
+@JsonSerializable()
 class BannerModel{
-  final String desc;
-  final String imagePath;
-  final String title;
-  final String url;
-  final int id;
-  final int isVisible;
-  final int order;
-  final int type;
 
-  BannerModel({required this.desc,required this.imagePath,required this.title,required this.url,required this.id,required this.isVisible,
-    required this.order,required this.type});
+  @JsonKey(name: 'desc')
+  String desc;
 
-  factory BannerModel.fromJson(Map<String, dynamic> parsedJson){
-    return BannerModel(
-      desc: parsedJson['desc'],
-      imagePath: parsedJson['imagePath'],
-      title: parsedJson['title'],
-      url: parsedJson['url'],
-      id: parsedJson['id'],
-      isVisible: parsedJson['isVisible'],
-      order: parsedJson['order'],
-      type: parsedJson['type'],
-    );
-  }
+  @JsonKey(name: 'id')
+  int id;
 
-  @override
-  String toString() {
-    return 'Data{desc: $desc, imagePath: $imagePath, title: $title, url: $url, id: $id, isVisible: $isVisible, order: $order, type: $type}';
-  }
+  @JsonKey(name: 'imagePath')
+  String imagePath;
+
+  @JsonKey(name: 'isVisible')
+  int isVisible;
+
+  @JsonKey(name: 'order')
+  int order;
+
+  @JsonKey(name: 'title')
+  String title;
+
+  @JsonKey(name: 'type')
+  int type;
+
+  @JsonKey(name: 'url')
+  String url;
+
+  BannerModel(this.desc,this.id,this.imagePath,this.isVisible,this.order,this.title,this.type,this.url,);
+
+  factory BannerModel.fromJson(Map<String, dynamic> srcJson) => _$BannerModelFromJson(srcJson);
+
+  Map<String, dynamic> toJson() => _$BannerModelToJson(this);
+
 }
+
+
+
+
+
+
 
