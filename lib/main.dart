@@ -192,9 +192,15 @@ class MainState extends State<MainPage> with TickerProviderStateMixin{
   );
 
   get _tabBarView{
-    return TabBarView(
-      controller: _tabController,
-      physics: NeverScrollableScrollPhysics(),
+    // return TabBarView(
+    //   controller: _tabController,
+    //   physics: NeverScrollableScrollPhysics(),
+    //   children: allPages,
+    // );
+    return IndexedStack ( //切换无动画
+      // controller: _tabController,
+      // physics: NeverScrollableScrollPhysics(),
+      index: curIndex, //The index of the child to show.
       children: allPages,
     );
   }

@@ -62,8 +62,8 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     });
   }
 
-  void _getArticle(int page) {
-    HttpManager().getArticle(params: {
+  Future _getArticle(int page) {
+    return HttpManager().getArticle(params: {
       'page':page
     },success: (data){
       setState(() {
@@ -77,7 +77,11 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListView.builder(
+    return RefreshIndicator(
+      onRefresh: () {
+        return _getArticle(0);
+        },
+      child: ListView.builder(
         controller: _controller,
         itemCount: articleList.length+2,
         itemBuilder: (context, index) {
@@ -106,7 +110,9 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
           } else {
             return getListItem(articleList[index - 2]);
           }
-        });
+        }),
+
+    );
   }
 
   Widget getListItem(article.Datas data) {

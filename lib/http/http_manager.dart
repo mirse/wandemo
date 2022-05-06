@@ -30,8 +30,8 @@ class HttpManager {
     }, fail: fail);
   }
 
-  void getArticle<T>({Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
-    _get<T>(Apis.URL_ARTICLE, params: params, data: data, success: (data) {
+  Future getArticle<T>({Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
+    return _get<T>(Apis.URL_ARTICLE, params: params, data: data, success: (data) {
       var articleModel = data['data'];
       if (success != null) {
         List list = articleModel['datas'];
@@ -69,24 +69,24 @@ class HttpManager {
   }
 
 
-  void _get<T>(String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
+  Future _get<T>(String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
     //required 表示必须传入,使得它们不为空
-    _request(Method.GET, url, params:params, data: data, success: success, fail: fail);
+    return _request(Method.GET, url, params:params, data: data, success: success, fail: fail);
   }
 
   //post 请求
-  void _post<T>(String url, {Map<String, dynamic>? params,data,Success? success, Fail? fail,}) {
-    _request(Method.POST, url, params:params, data: data, success: success, fail: fail);
+  Future _post<T>(String url, {Map<String, dynamic>? params,data,Success? success, Fail? fail,}) {
+    return _request(Method.POST, url, params:params, data: data, success: success, fail: fail);
   }
 
-  void _request<T>(Method method, String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
+  Future _request<T>(Method method, String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
     params?.forEach((key, value) {
       if (url.indexOf(key) != -1) {
         url = url.replaceAll(':$key', value.toString());
       }
     });
     print('_request url:${url}');
-    DioManager().request(method, url ,data: data, success: (data) {
+    Future future = DioManager().request(method, url ,data: data, success: (data) {
       if (data['errorCode'] == 0) {
         if (success != null) {
           // var bannerModel = banner.BannerModel.fromJson(data);
@@ -101,5 +101,6 @@ class HttpManager {
         fail(code, msg);
       }
     });
+    return future;
   }
 }
