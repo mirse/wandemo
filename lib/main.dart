@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/my_page.dart';
-import 'package:wandemo/page/project_page.dart';
+import 'package:wandemo/page/project/project_page.dart';
 import 'package:wandemo/page/sort_page.dart';
 
 void main() {
@@ -16,7 +16,6 @@ void main() {
     SystemChrome.setSystemUIOverlayStyle(systemUi);
   }
 }
-var curIndex = 0;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -48,18 +47,30 @@ class MainPage extends StatefulWidget {
   }
 }
 
-class MainState extends State<MainPage>{
-
+class MainState extends State<MainPage> with TickerProviderStateMixin{
+  var curIndex = 0;
   var allPages=[HomePage(),ProjectPage(),SortPage(),MyPage()];
-
+  TabController? _tabController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbar,
       drawer: _drawer,
       bottomNavigationBar: _bottomNavigationBar,
-      body: allPages[curIndex],
+      body: _tabBarView,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: allPages.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController?.dispose();
   }
 
   get _appbar => AppBar(
@@ -174,10 +185,19 @@ class MainState extends State<MainPage>{
       setState(() {
         print("the index is :$index");
         curIndex=index;
+        _tabController?.index = index;
       });
 
     },
   );
+
+  get _tabBarView{
+    return TabBarView(
+      controller: _tabController,
+      physics: NeverScrollableScrollPhysics(),
+      children: allPages,
+    );
+  }
 
 }
 

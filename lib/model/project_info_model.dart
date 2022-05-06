@@ -1,42 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'article_model.g.dart';
 
-//flutter packages pub run build_runner build
-@JsonSerializable()
-class ArticleModel extends Object {
-
-  @JsonKey(name: 'curPage')
-  int curPage;
-
-  @JsonKey(name: 'datas')
-  List<Datas> datas;
-
-  @JsonKey(name: 'offset')
-  int offset;
-
-  @JsonKey(name: 'over')
-  bool over;
-
-  @JsonKey(name: 'pageCount')
-  int pageCount;
-
-  @JsonKey(name: 'size')
-  int size;
-
-  @JsonKey(name: 'total')
-  int total;
-
-  ArticleModel(this.curPage,this.datas,this.offset,this.over,this.pageCount,this.size,this.total,);
-
-  factory ArticleModel.fromJson(Map<String, dynamic> srcJson) => _$ArticleModelFromJson(srcJson);
-
-  Map<String, dynamic> toJson() => _$ArticleModelToJson(this);
-
-}
+part 'project_info_model.g.dart';
 
 
 @JsonSerializable()
-class Datas extends Object {
+class ProjectInfoModel extends Object {
 
   @JsonKey(name: 'apkLink')
   String apkLink;
@@ -120,7 +88,7 @@ class Datas extends Object {
   String superChapterName;
 
   @JsonKey(name: 'tags')
-  List<dynamic> tags;
+  List<Tags> tags;
 
   @JsonKey(name: 'title')
   String title;
@@ -137,10 +105,30 @@ class Datas extends Object {
   @JsonKey(name: 'zan')
   int zan;
 
-  Datas(this.apkLink,this.audit,this.author,this.canEdit,this.chapterId,this.chapterName,this.collect,this.courseId,this.desc,this.descMd,this.envelopePic,this.fresh,this.host,this.id,this.link,this.niceDate,this.niceShareDate,this.origin,this.prefix,this.projectLink,this.publishTime,this.realSuperChapterId,this.selfVisible,this.shareDate,this.shareUser,this.superChapterId,this.superChapterName,this.tags,this.title,this.type,this.userId,this.visible,this.zan,);
+  ProjectInfoModel(this.apkLink,this.audit,this.author,this.canEdit,this.chapterId,this.chapterName,this.collect,this.courseId,this.desc,this.descMd,this.envelopePic,this.fresh,this.host,this.id,this.link,this.niceDate,this.niceShareDate,this.origin,this.prefix,this.projectLink,this.publishTime,this.realSuperChapterId,this.selfVisible,this.shareDate,this.shareUser,this.superChapterId,this.superChapterName,this.tags,this.title,this.type,this.userId,this.visible,this.zan,);
 
-  factory Datas.fromJson(Map<String, dynamic> srcJson) => _$DatasFromJson(srcJson);
+  factory ProjectInfoModel.fromJson(Map<String, dynamic> srcJson) => _$ProjectInfoModelFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$DatasToJson(this);
+  Map<String, dynamic> toJson() => _$ProjectInfoModelToJson(this);
 
 }
+
+
+@JsonSerializable()
+class Tags extends Object {
+
+  @JsonKey(name: 'name')
+  String name;
+
+  @JsonKey(name: 'url')
+  String url;
+
+  Tags(this.name,this.url,);
+
+  factory Tags.fromJson(Map<String, dynamic> srcJson) => _$TagsFromJson(srcJson);
+
+  Map<String, dynamic> toJson() => _$TagsToJson(this);
+
+}
+
+

@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class HomeState extends State<HomePage> {
+class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   late List<banner.BannerModel> httpImg = [];
   late List<article.Datas> articleList = [];
   int _articlePage = 0;
@@ -36,16 +36,12 @@ class HomeState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // HttpManager().getBanner<banner.BannerModel>(success:(data){
-    //   var bannerModel = banner.BannerModel.fromJson(data);
-    //   return bannerModel.datas;
-    // },fail: (errorCode,msg){
-    //
-    // });
-    getBanner().then((List<banner.BannerModel> value) {
+    HttpManager().getBanner<banner.BannerModel>(success:(data){
       setState(() {
-        httpImg = value;
+        httpImg = data;
       });
+    },fail: (errorCode,msg){
+
     });
 
     getHotkey().then((List<hotkey.Data> value) {
@@ -57,7 +53,9 @@ class HomeState extends State<HomePage> {
     _getArticle(_articlePage);
 
     _controller.addListener(() {
-      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      var distance = _controller.position.maxScrollExtent -
+          _controller.position.pixels;
+      if (distance<300 && _controller.position.maxScrollExtent != 0) {
         _articlePage++;
         _getArticle(_articlePage);
       }
@@ -65,16 +63,20 @@ class HomeState extends State<HomePage> {
   }
 
   void _getArticle(int page) {
-    getArticle(page).then((List<article.Datas> value) {
+    HttpManager().getArticle(params: {
+      'page':page
+    },success: (data){
       setState(() {
-        articleList.addAll(value);
-        print("initState-----------${articleList.length}");
+        articleList.addAll(data);
       });
+    },fail: (errorCode,msg){
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView.builder(
         controller: _controller,
         itemCount: articleList.length+2,
@@ -161,33 +163,11 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Future<List<banner.BannerModel>> getBanner() async {
-    Response response =
-        await Dio().get('https://www.wanandroid.com/banner/json');
-    List list = response.data['data'];
-    List<banner.BannerModel> bannerList=[];
-    for(int i =0;i<list.length;i++){
-      banner.BannerModel bannerModel = banner.BannerModel.fromJson(list[i]);
-      bannerList.add(bannerModel);
-    }
-    // List<banner.BannerModel> bannerList = list.map((e){
-    //   banner.BannerModel.fromJson(e);
-    // }).toList();
-    return bannerList;
-  }
-
   Future<List<hotkey.Data>> getHotkey() async {
     Response response =
         await Dio().get('https://www.wanandroid.com//hotkey/json');
     var hotkeyModel = hotkey.HotkeyModel.fromJson(response.data);
     return hotkeyModel.data;
-  }
-
-  Future<List<article.Datas>> getArticle(int page) async {
-    Response response =
-        await Dio().get('https://www.wanandroid.com/article/list/$page/json');
-    var articleModel = article.ArticleModel.fromJson(response.data);
-    return articleModel.data.datas;
   }
 
   List<Widget> getGridChild() {
@@ -214,4 +194,7 @@ class HomeState extends State<HomePage> {
           ],
         ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

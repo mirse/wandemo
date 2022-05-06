@@ -7,7 +7,7 @@ import '../utils/constant.dart';
 //https://www.cnblogs.com/zyzmlc/p/14088886.html
 class DioManager {
   //const int _receiveTimeout = 15000; //声明类成员变量时，const变量必须同时被声明为static的
-  late Dio _dio;
+  var _dio = null;
   DioManager._init(){//私有构造函数 ,命名构造函数
     if(_dio == null){
       var options = BaseOptions(
@@ -35,7 +35,7 @@ class DioManager {
     try {
       //TODO 网络检查
       var response = await _dio.request(path, data: data, options: Options(method: MethodValues[method]));
-      if (response != null && success != null) {
+      if (success != null) {
         success(response.data);
       } else {
         _onError(unknown_error, '未知错误', fail);

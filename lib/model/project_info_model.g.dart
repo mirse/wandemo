@@ -1,35 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article_model.dart';
+part of 'project_info_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ArticleModel _$ArticleModelFromJson(Map<String, dynamic> json) => ArticleModel(
-      json['curPage'] as int,
-      (json['datas'] as List<dynamic>)
-          .map((e) => Datas.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      json['offset'] as int,
-      json['over'] as bool,
-      json['pageCount'] as int,
-      json['size'] as int,
-      json['total'] as int,
-    );
-
-Map<String, dynamic> _$ArticleModelToJson(ArticleModel instance) =>
-    <String, dynamic>{
-      'curPage': instance.curPage,
-      'datas': instance.datas,
-      'offset': instance.offset,
-      'over': instance.over,
-      'pageCount': instance.pageCount,
-      'size': instance.size,
-      'total': instance.total,
-    };
-
-Datas _$DatasFromJson(Map<String, dynamic> json) => Datas(
+ProjectInfoModel _$ProjectInfoModelFromJson(Map<String, dynamic> json) =>
+    ProjectInfoModel(
       json['apkLink'] as String,
       json['audit'] as int,
       json['author'] as String,
@@ -57,7 +35,9 @@ Datas _$DatasFromJson(Map<String, dynamic> json) => Datas(
       json['shareUser'] as String,
       json['superChapterId'] as int,
       json['superChapterName'] as String,
-      json['tags'] as List<dynamic>,
+      (json['tags'] as List<dynamic>)
+          .map((e) => Tags.fromJson(e as Map<String, dynamic>))
+          .toList(),
       json['title'] as String,
       json['type'] as int,
       json['userId'] as int,
@@ -65,7 +45,8 @@ Datas _$DatasFromJson(Map<String, dynamic> json) => Datas(
       json['zan'] as int,
     );
 
-Map<String, dynamic> _$DatasToJson(Datas instance) => <String, dynamic>{
+Map<String, dynamic> _$ProjectInfoModelToJson(ProjectInfoModel instance) =>
+    <String, dynamic>{
       'apkLink': instance.apkLink,
       'audit': instance.audit,
       'author': instance.author,
@@ -99,4 +80,14 @@ Map<String, dynamic> _$DatasToJson(Datas instance) => <String, dynamic>{
       'userId': instance.userId,
       'visible': instance.visible,
       'zan': instance.zan,
+    };
+
+Tags _$TagsFromJson(Map<String, dynamic> json) => Tags(
+      json['name'] as String,
+      json['url'] as String,
+    );
+
+Map<String, dynamic> _$TagsToJson(Tags instance) => <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
     };
