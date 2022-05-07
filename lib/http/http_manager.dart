@@ -1,6 +1,7 @@
 import 'package:wandemo/http/api.dart';
 import 'package:wandemo/http/dio_manager.dart';
 import 'package:wandemo/model/article_model.dart';
+import 'package:wandemo/model/login_info_model.dart';
 import 'package:wandemo/model/project_info_model.dart';
 import 'package:wandemo/model/project_model.dart';
 import '../model/banner_model.dart';
@@ -64,6 +65,16 @@ class HttpManager {
           return ProjectInfoModel.fromJson(e);
         }).toList();
         success(datas);
+      }
+    },fail: fail);
+  }
+
+  void login({Map<String, dynamic>? params,data, Success? success, Fail? fail}){
+    _post(Apis.URL_LOGIN,params: params,data: data,success: (data){
+      var loginInfo = data['data'];
+      if (success != null) {
+        LoginInfoModel data = LoginInfoModel.fromJson(loginInfo);
+        success(data);
       }
     },fail: fail);
   }

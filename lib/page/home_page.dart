@@ -116,56 +116,63 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   }
 
   Widget getListItem(article.Datas data) {
-    return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text(
-              data.title,
-              style: TextStyle(fontWeight: FontWeight.w500),
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                data.title,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child: Row(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    //背景
-                    color: Colors.white,
-                    //设置四周圆角 角度
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    //设置四周边框
-                    border: new Border.all(width: 1, color: Colors.blueAccent),
-                  ),
-                  child: Text(
-                    data.chapterName,
-                    style: TextStyle(
-                      color: Colors.blueAccent,
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      //背景
+                      color: Colors.white,
+                      //设置四周圆角 角度
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      //设置四周边框
+                      border: new Border.all(width: 1, color: Colors.blueAccent),
+                    ),
+                    child: Text(
+                      data.chapterName,
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Icon(
-                    data.collect ? Icons.favorite : Icons.favorite_border,
-                    color: data.collect ? Colors.red : Colors.grey,
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Icon(
+                      data.collect ? Icons.favorite : Icons.favorite_border,
+                      color: data.collect ? Colors.red : Colors.grey,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Text(data.shareUser),
-                )
-              ],
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(data.shareUser),
+                  )
+                ],
+              ),
             ),
-          ),
-          Divider(),
-        ],
+            Divider(),
+          ],
+        ),
       ),
+      onTap:(){
+        Navigator.of(context).pushNamed('/articleInfo',
+            arguments: {'link':data.link,'title':data.title}
+        );
+      },
     );
   }
 

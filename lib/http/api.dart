@@ -6,4 +6,6 @@ class Apis{
   static const String URL_PROJECT = 'project/tree/json';
 
   static const String URL_PROJECT_INFO = 'project/list/:page/json?cid=:cid';
+
+  static const String URL_LOGIN = 'user/login';
 }

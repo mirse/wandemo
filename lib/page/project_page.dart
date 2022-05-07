@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wandemo/http/http_manager.dart';
-import 'package:wandemo/page/project/project_info_page.dart';
+import 'package:wandemo/page/project_info_page.dart';
 
 import '../../model/project_model.dart';
 

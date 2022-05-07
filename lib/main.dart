@@ -4,10 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:wandemo/page/article_info_page.dart';
 import 'package:wandemo/page/home_page.dart';
+import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
-import 'package:wandemo/page/project/project_page.dart';
+import 'package:wandemo/page/project_page.dart';
 import 'package:wandemo/page/sort_page.dart';
+import 'package:wandemo/route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,13 +30,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
-      // routes:{
-      //   '/home':(BuildContext context) => HomePage(),
-      //   '/project':(BuildContext context) => ProjectPage(),
-      //   '/sort':(BuildContext context) => SortPage(),
-      //   '/my':(BuildContext context) => MyPage(),
-      // },
+      home: LoginPage(),
+      //initialRoute: '/', //与home选其一
+      //routes:routes,
+      onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
 
 
     );
@@ -166,7 +166,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin{
           ],
         ),
       ),
-      onTap: ()=>print('click header'),
+      onTap: (){
+        //点击drawer首栏
+
+      },
     ),
   );
 
