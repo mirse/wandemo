@@ -11,17 +11,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Stack(
+      body: Stack(//Stack的宽高将以宽高最大的子widget为基础
           children: [
             Container(
                 width: double.infinity,
                 child: Image.asset('assets/imgs/ic_login.png',height: 200,fit: BoxFit.fitWidth,)),
             Positioned(child: Icon(Icons.arrow_back,color: Colors.black,),top: 35,left: 10,),
             Positioned(
-              top: 50,
+                top: 0,
+                left: 0,
                 child:Container(
-                  height: 200,
+                  width: 300,
                   color: Colors.red,
                   // decoration: BoxDecoration(
                   //   color: Colors.red,
@@ -46,9 +46,10 @@ class _LoginPageState extends State<LoginPage> {
                   //   ],
                   // ),
                 )
-            )
+            ),
+
+
           ],
-        ),
       ),
     );
   }
