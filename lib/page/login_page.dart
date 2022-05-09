@@ -9,6 +9,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController? controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = TextEditingController();
+    controller?.addListener((){});
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,39 +55,62 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Container(
                       child: TextField(
-                        decoration: InputDecoration(
+                        decoration: InputDecoration( //去除下划线
                           labelText: '账号',
-                          hintText: '请输入账号'
+                          hintText: '请输入账号',
+                           filled: true,//是否填充
+                          // fillColor: Colors.grey,//填充颜色
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          isCollapsed: true, //高度包裹
+                          contentPadding: EdgeInsets.all(10),
+                          icon: Icon(Icons.person),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              controller?.clear();
+                            },
+                          ),
+
                         ),
+                        // maxLength: 5,
+                        controller: controller,
+                        style: TextStyle(fontSize: 15),
                       ),
                       margin: EdgeInsets.all(10),
                     ),
                     Container(
-                        child: TextField(
-                      decoration: InputDecoration(
-                        labelText: '密码',
-                          hintText: '请输入密码'
-                      ),),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: '密码',
+                          hintText: '请输入密码',
+                        ),
+                        obscureText: true,
+                      ),
                       margin: EdgeInsets.all(10),
                     ),
-                    SizedBox(height: 30,),
+                    SizedBox(
+                      height: 30,
+                    ),
                     TextButton(
-                          onPressed: () {
-                            print("aaa");
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                            side: MaterialStateProperty.all(BorderSide(
-                              width: 1,
-                              color: Colors.blueAccent
-                            )),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18)
-                            )),
-                            minimumSize: MaterialStateProperty.all(Size(200, 40)),
-                          ),
-                          child: Text('登录',style: TextStyle(color: Colors.black),)),
-
+                        onPressed: () {
+                          print("aaa");
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                          side: MaterialStateProperty.all(
+                              BorderSide(width: 1, color: Colors.blueAccent)),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18))),
+                          minimumSize: MaterialStateProperty.all(Size(200, 40)),
+                        ),
+                        child: Text(
+                          '登录',
+                          style: TextStyle(color: Colors.black),
+                        )),
                   ],
                 ),
               )),
