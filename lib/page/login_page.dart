@@ -10,13 +10,15 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController? controller;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = TextEditingController();
-    controller?.addListener((){});
+    controller?.addListener(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,32 +56,46 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     Container(
-                      child: TextField(
-                        decoration: InputDecoration( //去除下划线
-                          labelText: '账号',
-                          hintText: '请输入账号',
-                           filled: true,//是否填充
-                          // fillColor: Colors.grey,//填充颜色
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                        child: Theme(
+                          data: ThemeData(
+                              primaryColor: Colors.yellow,// 主色，决定导航栏颜色
+                              primarySwatch:Colors.brown // 主题颜色样本
                           ),
-                          isCollapsed: true, //高度包裹
-                          contentPadding: EdgeInsets.all(10),
-                          icon: Icon(Icons.person),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              controller?.clear();
-                            },
-                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              //去除下划线
+                              labelText: '账号',
+                              hintText: '请输入账号',
+                              filled: true,
+                              //是否填充
+                              // fillColor: Colors.grey,//填充颜色
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
 
+                              ),
+                              isCollapsed: true,
+                              //高度包裹
+                              contentPadding: EdgeInsets.all(10),
+                              icon: Icon(Icons.person),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  controller?.clear();
+                                },
+                              ),
+                                // enabledBorder: OutlineInputBorder(
+                                //     borderSide: BorderSide(color: Color(0xffB6B6B6), width: 0.5)),
+                                // focusedBorder: OutlineInputBorder(
+                                //     borderSide: BorderSide(color: Color(0xffFD3F2A), width: 1)),
+
+                            ),
+                            // maxLength: 5,
+                            controller: controller,
+                            style: TextStyle(fontSize: 15),
+                          ),
                         ),
-                        // maxLength: 5,
-                        controller: controller,
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      margin: EdgeInsets.all(10),
-                    ),
+                        margin: EdgeInsets.fromLTRB(15, 25, 15, 0)),
                     Container(
                       child: TextField(
                         decoration: InputDecoration(
