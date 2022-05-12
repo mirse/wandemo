@@ -9,14 +9,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController? controller;
-
+  TextEditingController _controller = TextEditingController();
+  bool _isObscure  = true;
+  String _userName = '';
+  String _pwd = '';
+  bool _isLoginable = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = TextEditingController();
-    controller?.addListener(() {});
+    _controller.addListener(() {
+      _userName = _controller.text;
+      setState(() {
+        _isLoginable = _getLoginable();
+      });
+    });
   }
 
   @override
@@ -74,14 +81,13 @@ class _LoginPageState extends State<LoginPage> {
                                     BorderRadius.all(Radius.circular(5)),
 
                               ),
-                              isCollapsed: true,
-                              //高度包裹
-                              contentPadding: EdgeInsets.all(10),
+                              //isCollapsed: true,//高度包裹
+                              contentPadding: EdgeInsets.only(left: 10,top: 0, bottom: 0),
                               icon: Icon(Icons.person),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.close),
                                 onPressed: () {
-                                  controller?.clear();
+                                  _controller.clear();
                                 },
                               ),
                                 // enabledBorder: OutlineInputBorder(
@@ -91,47 +97,95 @@ class _LoginPageState extends State<LoginPage> {
 
                             ),
                             // maxLength: 5,
-                            controller: controller,
+                            controller: _controller,
                             style: TextStyle(fontSize: 15),
                           ),
                         ),
                         margin: EdgeInsets.fromLTRB(15, 25, 15, 0)),
+                    //obscureText: true,
                     Container(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: '密码',
-                          hintText: '请输入密码',
+                        child: Theme(
+                          data: ThemeData(
+                              primaryColor: Colors.yellow,// 主色，决定导航栏颜色
+                              primarySwatch:Colors.brown // 主题颜色样本
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              //去除下划线
+                              labelText: '密码',
+                              hintText: '请输入密码',
+                              filled: true,
+                              //是否填充
+                              // fillColor: Colors.grey,//填充颜色
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(5)),
+
+                              ),
+                              //isCollapsed: true,//高度包裹
+                              contentPadding: EdgeInsets.only(left: 10,top: 0, bottom: 0),
+                              icon: Icon(Icons.vpn_key_sharp),
+                              suffixIcon: IconButton(
+                                icon: Icon(_isObscure?Icons.visibility : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                },
+                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //     borderSide: BorderSide(color: Color(0xffB6B6B6), width: 0.5)),
+                              // focusedBorder: OutlineInputBorder(
+                              //     borderSide: BorderSide(color: Color(0xffFD3F2A), width: 1)),
+
+                            ),
+                            // maxLength: 5,
+
+                            style: TextStyle(fontSize: 15),
+                            obscureText:_isObscure,
+                            onChanged: (value){
+                              _pwd = value;
+                              setState(() {
+                                _isLoginable = _getLoginable();
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
-                      ),
-                      margin: EdgeInsets.all(10),
+                        margin: EdgeInsets.fromLTRB(15, 25, 15, 0)
                     ),
                     SizedBox(
                       height: 30,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          print("aaa");
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.transparent),
-                          side: MaterialStateProperty.all(
-                              BorderSide(width: 1, color: Colors.blueAccent)),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18))),
-                          minimumSize: MaterialStateProperty.all(Size(200, 40)),
-                        ),
-                        child: Text(
-                          '登录',
-                          style: TextStyle(color: Colors.black),
-                        )),
+                    Container(
+                      margin: EdgeInsets.only(top: 20,left: 30,right: 30),
+                      child: TextButton(
+                          onPressed:_isLoginable?() {
+                            print("aaa");
+                          }:null,
+                          style: ButtonStyle(
+                            backgroundColor:
+                            MaterialStateProperty.all(_isLoginable?Colors.blue.shade300:Colors.grey.shade300),
+                            // side: MaterialStateProperty.all(
+                            //     BorderSide(width: 1, color: Colors.blueAccent)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18))),
+                            minimumSize: MaterialStateProperty.all(Size(double.infinity, 40)),
+                          ),
+                          child: Text(
+                            '登录',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    )
                   ],
                 ),
               )),
         ],
       ),
     );
+  }
+
+  bool _getLoginable(){
+    return _userName.isNotEmpty && _pwd.isNotEmpty;
   }
 }
