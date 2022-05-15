@@ -1,5 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wandemo/http/http_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../utils/toast_utils.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -160,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                       margin: EdgeInsets.only(top: 20,left: 30,right: 30),
                       child: TextButton(
                           onPressed:_isLoginable?() {
-                            print("aaa");
+                            FocusScope.of(context).unfocus();
+                            _login();
                           }:null,
                           style: ButtonStyle(
                             backgroundColor:
@@ -176,6 +182,27 @@ class _LoginPageState extends State<LoginPage> {
                             '登录',
                             style: TextStyle(color: Colors.white),
                           )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20,left: 30,right: 30),
+                      child: TextButton(
+                          onPressed:() {
+                            //注册
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                            MaterialStateProperty.all(Colors.grey.shade300),
+                            // side: MaterialStateProperty.all(
+                            //     BorderSide(width: 1, color: Colors.blueAccent)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18))),
+                            minimumSize: MaterialStateProperty.all(Size(double.infinity, 40)),
+                          ),
+                          child: Text(
+                            '注册',
+                            style: TextStyle(color: Colors.white),
+                          )),
                     )
                   ],
                 ),
@@ -187,5 +214,19 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _getLoginable(){
     return _userName.isNotEmpty && _pwd.isNotEmpty;
+  }
+
+  void _login(){
+    HttpManager().login(
+        data: FormData.fromMap(
+          {'username':_userName,'password':_pwd},
+        ),
+        success: (data){
+          ToastUtils.showToast('登录成功');
+        },fail:(errorCode,msg){
+          print('登录失败:${errorCode},${msg}');
+          ToastUtils.showToast('登录失败：${msg}');
+        }
+        );
   }
 }

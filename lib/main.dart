@@ -4,16 +4,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:wandemo/page/article_info_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
 import 'package:wandemo/page/project_page.dart';
 import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
+import 'package:wandemo/utils/global.dart';
+import 'package:wandemo/utils/permission_utils.dart';
 
-void main() {
+void main() async{
   runApp(const MyApp());
+  PermissionUtils.requestPermission(Permission.storage,
+      denied: () {
+        print('denied');
+      },
+      permanentlyDenied: () {
+        print('permanentlyDenied');
+      },
+      granted: () async {
+        print('granted');
+        await Global.init();
+      });
   if(Platform.isAndroid){
     var systemUi = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUi);

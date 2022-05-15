@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:wandemo/http/api.dart';
 import '../utils/constant.dart';
 
 //https://www.cnblogs.com/zyzmlc/p/14088886.html
 class DioManager {
   //const int _receiveTimeout = 15000; //声明类成员变量时，const变量必须同时被声明为static的
-  var _dio = null;
+  Dio? _dio;
   DioManager._init(){//私有构造函数 ,命名构造函数
     if(_dio == null){
       var options = BaseOptions(
@@ -30,13 +33,25 @@ class DioManager {
     return _instance;
   }
 
+  Future initCookieJar() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    var persistCookieJar = PersistCookieJar(storage: FileStorage(path));
+    _dio?.interceptors.add(CookieManager(persistCookieJar));
+  }
+
   Future request<T>(Method method, String path, {data,
       Success? success, Fail? fail}) async {
     try {
       //TODO 网络检查
-      var response = await _dio.request(path, data: data, options: Options(method: MethodValues[method]));
+      var response = await _dio?.request(path, data: data, options: Options(method: MethodValues[method]));
       if (success != null) {
-        success(response.data);
+        if(response?.data['errorCode'] == 0){
+          success(response?.data);
+        }
+        else{
+          _onError(response?.data['errorCode'], response?.data['errorMsg'], fail);
+        }
       } else {
         _onError(unknown_error, '未知错误', fail);
       }
@@ -51,7 +66,7 @@ class DioManager {
       code = unknown_error;
       msg = '未知错误';
     }
-    print('接口请求错误,原因：${msg}');
+    //print('接口请求错误,原因：${msg}');
     if (fail != null) {
       fail(code, msg);
     }

@@ -1,4 +1,7 @@
+import 'package:cookie_jar/cookie_jar.dart';
+
 class Apis{
+
   static const String URL_BASE = 'https://www.wanandroid.com/';
   static const String URL_BANNER = 'banner/json';
   static const String URL_ARTICLE = 'article/list/:page/json';
