@@ -31,3 +31,6 @@ const MethodValues = {
   Method.PATCH:'patch',
   Method.HEAD:'head',
 };
+
+//sp_key
+const String KEY_USER ="key_user";

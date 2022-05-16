@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
@@ -13,6 +14,8 @@ import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
 import 'package:wandemo/utils/global.dart';
 import 'package:wandemo/utils/permission_utils.dart';
+
+import 'controller/login_controller.dart';
 
 void main() async{
   runApp(const MyApp());
@@ -38,12 +41,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: MainPage(),
       //initialRoute: '/', //与home选其一
       //routes:routes,
       onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
@@ -151,40 +154,46 @@ class MainState extends State<MainPage> with TickerProviderStateMixin{
   )
   );
 
-  get _drawerHeader => DrawerHeader(
-    decoration: BoxDecoration(
-      color: Colors.blueAccent, //设置顶部背景颜色或图片
-    ),
-    padding: EdgeInsets.all(0),// 此处能解决DrawerHeader为灰色的问题
-    child: GestureDetector(//点击事件
-      child: Container(
-        margin: EdgeInsets.only(left: 15),
-        child: Row(
-          children: [
-            ClipOval(
-              child: Image.asset(
-                'assets/imgs/default_avatar.png',
-                width: 70,
-                height: 70,
+  get _drawerHeader =>
+      Obx((){
+        return DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.blueAccent, //设置顶部背景颜色或图片
+          ),
+          padding: EdgeInsets.all(0),// 此处能解决DrawerHeader为灰色的问题
+          child: GestureDetector(//点击事件
+            child: Container(
+              margin: EdgeInsets.only(left: 15),
+              child: Row(
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/imgs/default_avatar.png',
+                      width: 70,
+                      height: 70,
+                    ),
+                  ),
+                  Container(
+                    color: Colors.yellow,
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      appState.isLogin?(Global.loginInfoModel == null?'admin':Global.loginInfoModel!.nickname):'admin',
+                      style: TextStyle(fontSize: 20),
+
+                    ),
+                  )
+                ],
               ),
             ),
-            Container(
-              color: Colors.yellow,
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                'admin',
-                style: TextStyle(fontSize: 20),
-              ),
-            )
-          ],
-        ),
-      ),
-      onTap: (){
-        //点击drawer首栏
-
-      },
-    ),
-  );
+            onTap: (){
+              //点击drawer首栏
+              if(!Global.getLoginState()){
+                Navigator.of(context).pushNamed('/login',);
+              }
+            },
+          ),
+        );
+      });
 
   get _bottomNavigationBar => BottomNavigationBar(
     currentIndex: curIndex,

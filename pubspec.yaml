@@ -45,6 +45,10 @@ dependencies:
   path_provider: ^2.0.1
   #动态权限申请
   permission_handler: ^8.0.1
+  #share_preferences
+  sp_util: ^2.0.3
+  #GetX框架
+  get: ^4.1.2
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../controller/login_controller.dart';
+import '../utils/global.dart';
 import '../utils/toast_utils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,9 +49,14 @@ class _LoginPageState extends State<LoginPage> {
             )),
           ),
           Positioned(
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
+            child: GestureDetector(
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onTap:(){
+                Navigator.of(context).pop();
+              },
             ),
             top: 35,
             left: 10,
@@ -222,6 +229,8 @@ class _LoginPageState extends State<LoginPage> {
           {'username':_userName,'password':_pwd},
         ),
         success: (data){
+          Global.saveUserInfo(data);
+          appState.setLoginState(LoginState.LOGIN);
           ToastUtils.showToast('登录成功');
         },fail:(errorCode,msg){
           print('登录失败:${errorCode},${msg}');
