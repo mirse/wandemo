@@ -156,7 +156,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin{
 
   get _drawerHeader =>
       Obx((){
-        return DrawerHeader(
+        return
+          DrawerHeader(
           decoration: BoxDecoration(
             color: Colors.blueAccent, //设置顶部背景颜色或图片
           ),

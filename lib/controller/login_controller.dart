@@ -5,7 +5,7 @@ enum LoginState{ LOGIN , LOGIN_OUT }
 class LoginController extends GetxController {
   var _loginState = LoginState.LOGIN_OUT.obs;
   void setLoginState(loginState){
-    _loginState = loginState;
+    _loginState.value = loginState;
   }
 
   //用户是否已经登录了
