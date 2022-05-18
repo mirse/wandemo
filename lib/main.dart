@@ -14,6 +14,7 @@ import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
 import 'package:wandemo/utils/global.dart';
 import 'package:wandemo/utils/permission_utils.dart';
+import 'package:wandemo/widget/dialog_widget.dart';
 
 import 'controller/login_controller.dart';
 
@@ -195,76 +196,14 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                   '/login',
                 );
               } else {
-                Get.dialog(
-                  AlertDialog(
-                    contentPadding: EdgeInsets.only(top: 20.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '退出登录?',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    ),
-                    buttonPadding: EdgeInsets.all(0.0),//dialog action间距
-                    actions: <Widget>[
-                      SizedBox(
-                        height: 1,
-                        child: Center(
-                          child: Container(
-                            height: 1,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton(
-                              child: Text('取消',textAlign: TextAlign.center,),
-                              onPressed: () {
+                Get.dialog(MyDialog(
+                  '退出登录',
+                  '确定',
+                  () {
 
-                              },
-                            ),
-                            SizedBox(
-                              width: 1,
-                              child: Center(
-                                child: Container(
-                                  width: 1,
-                                  //margin: EdgeInsetsDirectional.only(start: indent, end: endIndent),
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      left: BorderSide(
-                                        width: 0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              child: Text('确认',textAlign: TextAlign.center,),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
+                  },
+                  cancelText: '取消',
+                ));
               }
             },
           ),

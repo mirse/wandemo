@@ -79,6 +79,14 @@ class HttpManager {
     },fail: fail);
   }
 
+  void loginOut({Map<String, dynamic>? params,data, Success? success, Fail? fail}){
+    _get(Apis.URL_LOGIN_OUT,params: params,data: data,success: (data){
+      if (success != null) {
+        success(data);
+      }
+    },fail: fail);
+  }
+
 
   Future _get<T>(String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
     //required 表示必须传入,使得它们不为空

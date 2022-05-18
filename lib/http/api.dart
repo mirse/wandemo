@@ -11,4 +11,5 @@ class Apis{
   static const String URL_PROJECT_INFO = 'project/list/:page/json?cid=:cid';
 
   static const String URL_LOGIN = 'user/login';
+  static const String URL_LOGIN_OUT = 'user/logout/json';
 }
