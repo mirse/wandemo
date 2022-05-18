@@ -117,3 +117,50 @@ class MyDialog extends StatelessWidget {
     );
   }
 }
+
+class LoadingDialog extends StatelessWidget {
+  String message = 'loading';
+
+  LoadingDialog(this.message);
+
+  //展示加载框
+  static void show({String message = 'loading'}) {
+    Get.dialog(LoadingDialog(message));
+  }
+
+  //关闭加载框
+  static void dismiss() {
+    Get.back();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Container(
+          width: 120,
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.grey,
+                ),
+                width: 40,
+                height: 40,
+              ),
+              SizedBox(height: 10),
+              Text(message)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -11,6 +11,7 @@ import '../utils/constant.dart';
 class DioManager {
   //const int _receiveTimeout = 15000; //声明类成员变量时，const变量必须同时被声明为static的
   Dio? _dio;
+  late PersistCookieJar persistCookieJar;
   DioManager._init(){//私有构造函数 ,命名构造函数
     if(_dio == null){
       var options = BaseOptions(
@@ -36,8 +37,12 @@ class DioManager {
   Future initCookieJar() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
-    var persistCookieJar = PersistCookieJar(storage: FileStorage(path));
+    persistCookieJar = PersistCookieJar(storage: FileStorage(path));
     _dio?.interceptors.add(CookieManager(persistCookieJar));
+  }
+
+  Future clearCookieJar() async {
+    await persistCookieJar.deleteAll();
   }
 
   Future request<T>(Method method, String path, {data,

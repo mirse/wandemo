@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
@@ -14,9 +15,11 @@ import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
 import 'package:wandemo/utils/global.dart';
 import 'package:wandemo/utils/permission_utils.dart';
+import 'package:wandemo/utils/toast_utils.dart';
 import 'package:wandemo/widget/dialog_widget.dart';
 
 import 'controller/login_controller.dart';
+import 'http/dio_manager.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -192,17 +195,30 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             onTap: () {
               //点击drawer首栏
               if (!Global.getLoginState()) {
-                Navigator.of(context).pushNamed(
-                  '/login',
-                );
+                LoadingDialog.show();
+                // Navigator.of(context).pushNamed(
+                //   '/login',
+                // );
               } else {
                 Get.dialog(MyDialog(
                   '退出登录',
                   '确定',
                   () {
-
+                    HttpManager().loginOut(success: (data){
+                      ToastUtils.showToast('退出登录成功');
+                      Global.clearUserInfo();
+                      DioManager().clearCookieJar();
+                      appState.setLoginState(LoginState.LOGIN_OUT);
+                      Get.back();
+                    },fail:(errorCode,msg){
+                      ToastUtils.showToast('退出登录失败：${msg}');
+                      Get.back();
+                    });
                   },
                   cancelText: '取消',
+                  onCancel: (){
+
+                  },
                 ));
               }
             },

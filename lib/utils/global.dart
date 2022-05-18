@@ -26,6 +26,11 @@ class Global{
     loginInfoModel = loginInfo;
   }
 
+  static clearUserInfo(){
+    SpUtil.remove(KEY_USER);
+    loginInfoModel = null;
+  }
+
   static bool getLoginState(){
     return loginInfoModel != null;
   }
