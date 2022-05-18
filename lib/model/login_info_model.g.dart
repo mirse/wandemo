@@ -6,7 +6,7 @@ part of 'login_info_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginInfoModel _$LoginInfoModelFromJson(Map<String, dynamic> json) =>
+LoginInfoModel _$LoginInfoModelFromJson(Map<dynamic, dynamic> json) =>
     LoginInfoModel(
       json['admin'] as bool,
       json['chapterTops'] as List<dynamic>,
@@ -23,8 +23,8 @@ LoginInfoModel _$LoginInfoModelFromJson(Map<String, dynamic> json) =>
       json['username'] as String,
     );
 
-Map<String, dynamic> _$LoginInfoModelToJson(LoginInfoModel instance) =>
-    <String, dynamic>{
+Map<dynamic, dynamic> _$LoginInfoModelToJson(LoginInfoModel instance) =>
+    <dynamic, dynamic>{
       'admin': instance.admin,
       'chapterTops': instance.chapterTops,
       'coinCount': instance.coinCount,

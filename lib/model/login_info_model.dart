@@ -47,9 +47,9 @@ class LoginInfoModel extends Object {
 
   LoginInfoModel(this.admin,this.chapterTops,this.coinCount,this.collectIds,this.email,this.icon,this.id,this.nickname,this.password,this.publicName,this.token,this.type,this.username,);
 
-  factory LoginInfoModel.fromJson(Map<String, dynamic> srcJson) => _$LoginInfoModelFromJson(srcJson);
+  factory LoginInfoModel.fromJson(Map<dynamic, dynamic> srcJson) => _$LoginInfoModelFromJson(srcJson);
 
-  Map<String, dynamic> toJson() => _$LoginInfoModelToJson(this);
+  Map<dynamic, dynamic> toJson() => _$LoginInfoModelToJson(this);
 
 }
 

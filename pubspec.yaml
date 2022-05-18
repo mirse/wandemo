@@ -48,7 +48,7 @@ dependencies:
   #share_preferences
   sp_util: ^2.0.3
   #GetX框架
-  get: ^4.1.2
+  get: ^4.6.1
 
 dev_dependencies:
   flutter_test:

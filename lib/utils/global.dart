@@ -13,7 +13,12 @@ class Global{
     Get.put<LoginController>(LoginController());//初始化loginController 控制器
     await DioManager().initCookieJar();
     await SpUtil.getInstance();
-    loginInfoModel = SpUtil.getObject(KEY_USER) as LoginInfoModel;
+    Map? data = SpUtil.getObject(KEY_USER);
+    if(data != null){
+      loginInfoModel = LoginInfoModel.fromJson(data);
+      appState.setLoginState(loginInfoModel != null?LoginState.LOGIN:LoginState.LOGIN_OUT);
+    }
+
   }
 
   static saveUserInfo(LoginInfoModel loginInfo){
