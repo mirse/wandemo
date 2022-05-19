@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
+import 'package:wandemo/messages.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
           initialRoute: '/', //与home选其一
           //routes:routes,
           getPages: pages,
+          locale: Get.deviceLocale,
+          translations: Messages(),
+          fallbackLocale: Locale("en","US"),
           //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
 
           ),
@@ -112,7 +116,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
-            title: Text('首页'),
+            title: Text('main'.tr),
             leading: Icon(Icons.home),
             onTap: () {
               Navigator.of(context).pop();
