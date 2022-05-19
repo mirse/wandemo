@@ -39,6 +39,7 @@ class DioManager {
     String path = directory.path;
     persistCookieJar = PersistCookieJar(storage: FileStorage(path));
     _dio?.interceptors.add(CookieManager(persistCookieJar));
+    print('initCookieJar');
   }
 
   Future clearCookieJar() async {
@@ -49,6 +50,7 @@ class DioManager {
       Success? success, Fail? fail}) async {
     try {
       //TODO 网络检查
+      _dio?.interceptors.add(CookieManager(persistCookieJar));
       var response = await _dio?.request(path, data: data, options: Options(method: MethodValues[method]));
       if (success != null) {
         if(response?.data['errorCode'] == 0){

@@ -1,13 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:wandemo/bindings/login_bindings.dart';
 import 'package:wandemo/main.dart';
 import 'package:wandemo/page/article_info_page.dart';
 import 'package:wandemo/page/login_page.dart';
+import 'package:wandemo/page/my_page.dart';
+
+List<GetPage> pages = [
+  GetPage(name: '/', page: () => MainPage()),
+  GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
+  GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
+];
+
 
 final routes = {
   //"/": (context, {arguments}) => MainPage(),
   '/articleInfo': (context, {arguments}) => ArticleInfoPage(
-        arguments: arguments,
+        //arguments: arguments,
       ),
   '/login': (context) => LoginPage(),
 };

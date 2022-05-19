@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/model/project_info_model.dart';
 
@@ -62,9 +63,10 @@ class _ProjectInfoPageState extends State<ProjectInfoPage> with AutomaticKeepAli
           )
         ),
         onTap: (){
-          Navigator.of(context).pushNamed('/articleInfo',
-              arguments: {'link':e.link,'title':e.title}
-          );
+          Get.toNamed('/articleInfo',arguments: {'link':e.link,'title':e.title});
+          // Navigator.of(context).pushNamed('/articleInfo',
+          //     arguments: {'link':e.link,'title':e.title}
+          // );
         },
       );
     }).toList();

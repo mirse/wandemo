@@ -12,4 +12,8 @@ class Apis{
 
   static const String URL_LOGIN = 'user/login';
   static const String URL_LOGIN_OUT = 'user/logout/json';
+
+  static const String URL_COLLECT_ARTICLE_IN = 'lg/collect/:id/json';
+  static const String URL_UNCOLLECT_ARTICLE_IN = 'lg/uncollect_originId/:id/json';
+
 }

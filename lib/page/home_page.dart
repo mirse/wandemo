@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
+import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/model/banner_model.dart' as banner;
 import 'package:wandemo/model/hotkey_model.dart' as hotkey;
 import 'package:wandemo/utils/constant.dart';
 
+import '../controller/login_controller.dart';
 import '../model/article_model.dart' as article;
+import '../model/article_model.dart';
+import '../utils/toast_utils.dart';
+import '../widget/dialog_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -36,6 +44,15 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   @override
   void initState() {
     super.initState();
+    ever(appController.loginState, (callBack) {
+      //每次登录状态发生变化，都要重新请求广场数据
+      _articlePage = 0;
+      _getArticle(_articlePage);
+    });
+
+    _articlePage = 0;
+    _getArticle(_articlePage);
+
     HttpManager().getBanner<banner.BannerModel>(success:(data){
       setState(() {
         httpImg = data;
@@ -43,14 +60,6 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     },fail: (errorCode,msg){
 
     });
-
-    getHotkey().then((List<hotkey.Data> value) {
-      setState(() {
-        //hotkeyList = value;
-      });
-    });
-
-    _getArticle(_articlePage);
 
     _controller.addListener(() {
       var distance = _controller.position.maxScrollExtent -
@@ -60,6 +69,9 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         _getArticle(_articlePage);
       }
     });
+
+
+
   }
 
   Future _getArticle(int page) {
@@ -67,6 +79,9 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       'page':page
     },success: (data){
       setState(() {
+        if(page == 0){
+          articleList.clear();
+        }
         articleList.addAll(data);
       });
     },fail: (errorCode,msg){
@@ -79,7 +94,8 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     super.build(context);
     return RefreshIndicator(
       onRefresh: () {
-        return _getArticle(0);
+        _articlePage = 0;
+        return _getArticle(_articlePage);
         },
       child: ListView.builder(
         controller: _controller,
@@ -152,9 +168,14 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10),
-                    child: Icon(
-                      data.collect ? Icons.favorite : Icons.favorite_border,
-                      color: data.collect ? Colors.red : Colors.grey,
+                    child: GestureDetector(
+                      child: Icon(
+                        data.collect ? Icons.favorite : Icons.favorite_border,
+                        color: data.collect ? Colors.red : Colors.grey,
+                      ),
+                      onTap: (){
+                        data.collect?_unCollectArticle(data):_collectArticle(data);
+                      },
                     ),
                   ),
                   Container(
@@ -169,18 +190,54 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
         ),
       ),
       onTap:(){
-        Navigator.of(context).pushNamed('/articleInfo',
-            arguments: {'link':data.link,'title':data.title}
-        );
+        Get.toNamed('/articleInfo',arguments: {'link':data.link,'title':data.title});
+        // Navigator.of(context).pushNamed('/articleInfo',
+        //     arguments: {'link':data.link,'title':data.title}
+        // );
       },
     );
   }
 
-  Future<List<hotkey.Data>> getHotkey() async {
-    Response response =
-        await Dio().get('https://www.wanandroid.com//hotkey/json');
-    var hotkeyModel = hotkey.HotkeyModel.fromJson(response.data);
-    return hotkeyModel.data;
+  void _collectArticle(Datas mData) {
+    LoadingDialog.show();
+    HttpManager().collectArticleIn(params: {
+      'id':mData.id
+    },success: (data){
+      mData.collect = true;
+      setState(() {
+
+      });
+      ToastUtils.showToast('收藏成功');
+      LoadingDialog.dismiss();
+    },fail: (errorCode,msg){
+      mData.collect = false;
+      setState(() {
+
+      });
+      ToastUtils.showToast('收藏失败：${msg}');
+      LoadingDialog.dismiss();
+    });
+  }
+
+  void _unCollectArticle(Datas mData) {
+    LoadingDialog.show();
+    HttpManager().unCollectArticleIn(params: {
+      'id':mData.id
+    },success: (data){
+      mData.collect = false;
+      setState(() {
+
+      });
+      ToastUtils.showToast('取消收藏成功');
+      LoadingDialog.dismiss();
+    },fail: (errorCode,msg){
+      mData.collect = true;
+      setState(() {
+
+      });
+      ToastUtils.showToast('取消收藏失败：${msg}');
+      LoadingDialog.dismiss();
+    });
   }
 
   List<Widget> getGridChild() {

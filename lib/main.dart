@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
@@ -22,6 +23,8 @@ import 'controller/login_controller.dart';
 import 'http/dio_manager.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Global.init();
   runApp(const MyApp());
   PermissionUtils.requestPermission(Permission.storage, denied: () {
     print('denied');
@@ -29,7 +32,7 @@ void main() async {
     print('permanentlyDenied');
   }, granted: () async {
     print('granted');
-    await Global.init();
+
   });
   if (Platform.isAndroid) {
     var systemUi = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -51,10 +54,11 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: MainPage(),
-          //initialRoute: '/', //与home选其一
+          //home: MainPage(),
+          initialRoute: '/', //与home选其一
           //routes:routes,
-          onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
+          getPages: pages,
+          //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
 
           ),
     );
@@ -181,7 +185,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                   Container(
                     margin: EdgeInsets.only(left: 20),
                     child: Text(
-                      appState.isLogin
+                      appController.isLogin
                           ? (Global.loginInfoModel == null
                               ? 'admin'
                               : Global.loginInfoModel!.nickname)
@@ -194,25 +198,24 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             ),
             onTap: () {
               //点击drawer首栏
-              if (!Global.getLoginState()) {
-                LoadingDialog.show();
-                // Navigator.of(context).pushNamed(
-                //   '/login',
-                // );
+              if (!appController.isLogin) {
+                Get.toNamed('/login');
               } else {
                 Get.dialog(MyDialog(
                   '退出登录',
                   '确定',
                   () {
+                    Get.back();
+                    LoadingDialog.show();
                     HttpManager().loginOut(success: (data){
                       ToastUtils.showToast('退出登录成功');
                       Global.clearUserInfo();
                       DioManager().clearCookieJar();
-                      appState.setLoginState(LoginState.LOGIN_OUT);
-                      Get.back();
+                      appController.setLoginState(LoginState.LOGIN_OUT);
+                      LoadingDialog.dismiss();
                     },fail:(errorCode,msg){
                       ToastUtils.showToast('退出登录失败：${msg}');
-                      Get.back();
+                      LoadingDialog.dismiss();
                     });
                   },
                   cancelText: '取消',

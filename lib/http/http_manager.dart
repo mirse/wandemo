@@ -87,6 +87,22 @@ class HttpManager {
     },fail: fail);
   }
 
+  void collectArticleIn({Map<String, dynamic>? params,data, Success? success, Fail? fail}){
+    _post(Apis.URL_COLLECT_ARTICLE_IN,params: params,data: data,success: (data){
+      if (success != null) {
+        success(data);
+      }
+    },fail: fail);
+  }
+
+  void unCollectArticleIn({Map<String, dynamic>? params,data, Success? success, Fail? fail}){
+    _post(Apis.URL_UNCOLLECT_ARTICLE_IN,params: params,data: data,success: (data){
+      if (success != null) {
+        success(data);
+      }
+    },fail: fail);
+  }
+
 
   Future _get<T>(String url, {Map<String, dynamic>? params,data, Success? success, Fail? fail}) {
     //required 表示必须传入,使得它们不为空

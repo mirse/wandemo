@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 
 class ArticleInfoPage extends StatefulWidget {
-  const ArticleInfoPage({Key? key, this.arguments}) : super(key: key);
-  final Map? arguments;
+  // const ArticleInfoPage({Key? key, this.arguments}) : super(key: key);
+  // final Map? arguments;
   @override
   _ArticleInfoPageState createState() => _ArticleInfoPageState();
 }
@@ -15,8 +16,10 @@ class _ArticleInfoPageState extends State<ArticleInfoPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _url = widget.arguments?['link'];
-    _title = widget.arguments?['title'];
+    _url = Get.arguments['link'];
+    _title = Get.arguments['title'];
+    // _url = widget.arguments?['link'];
+    // _title = widget.arguments?['title'];
   }
   @override
   Widget build(BuildContext context) {

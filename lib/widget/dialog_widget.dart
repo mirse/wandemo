@@ -119,13 +119,13 @@ class MyDialog extends StatelessWidget {
 }
 
 class LoadingDialog extends StatelessWidget {
-  String message = 'loading';
+  String message;
 
-  LoadingDialog(this.message);
+  LoadingDialog({required this.message});
 
   //展示加载框
-  static void show({String message = 'loading'}) {
-    Get.dialog(LoadingDialog(message));
+  static void show({String message = '加载中......'}) {
+    Get.dialog(LoadingDialog(message: message));
   }
 
   //关闭加载框
