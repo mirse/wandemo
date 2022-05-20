@@ -49,6 +49,7 @@ dependencies:
   sp_util: ^2.0.3
   #GetX框架
   get: ^4.6.1
+  oktoast: ^3.0.0
 
 dev_dependencies:
   flutter_test:

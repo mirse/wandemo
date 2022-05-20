@@ -6,11 +6,13 @@ import 'package:wandemo/main.dart';
 import 'package:wandemo/page/article_info_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
+import 'package:wandemo/page/setting_page.dart';
 
 List<GetPage> pages = [
   GetPage(name: '/', page: () => MainPage()),
   GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
   GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
+  GetPage(name: '/setting', page: () => SettingPage()),
 ];
 
 

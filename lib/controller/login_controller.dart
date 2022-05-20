@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:wandemo/controller/app_controller.dart';
 
 import '../http/http_manager.dart';
@@ -50,12 +51,13 @@ class LoginController extends GetxController {
           Global.saveUserInfo(data);
           appController.setLoginState(LoginState.LOGIN);
           LoadingDialog.dismiss();
-          ToastUtils.showToast('登录成功');
+          showToast('login_success'.tr);
+          //ToastUtils.showToast('login_success'.tr);
           Get.back();
         },fail:(errorCode,msg){
-      print('登录失败:${errorCode},${msg}');
+      print('login_fail'.tr+':$errorCode,$msg');
       LoadingDialog.dismiss();
-      ToastUtils.showToast('登录失败：${msg}');
+      ToastUtils.showToast('login_fail'.tr+msg);
     }
     );
   }

@@ -34,3 +34,5 @@ const MethodValues = {
 
 //sp_key
 const String KEY_USER ="key_user";
+const String KEY_LANGUAGE ="key_language";
+const String KEY_THEME ="key_theme";

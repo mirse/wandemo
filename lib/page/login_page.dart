@@ -28,8 +28,8 @@ class LoginPage extends GetView<LoginController> {
                       child: TextField(
                         decoration: InputDecoration(
                           //去除下划线
-                          labelText: '账号',
-                          hintText: '请输入账号',
+                          labelText: 'account'.tr,
+                          hintText: 'input_account'.tr,
                           filled: true,
                           //是否填充
                           // fillColor: Colors.grey,//填充颜色
@@ -72,8 +72,8 @@ class LoginPage extends GetView<LoginController> {
                       child: TextField(
                         decoration: InputDecoration(
                           //去除下划线
-                          labelText: '密码',
-                          hintText: '请输入密码',
+                          labelText: 'pwd'.tr,
+                          hintText: 'input_pwd'.tr,
                           filled: true,
                           //是否填充
                           // fillColor: Colors.grey,//填充颜色
@@ -130,7 +130,7 @@ class LoginPage extends GetView<LoginController> {
                         minimumSize: MaterialStateProperty.all(Size(double.infinity, 40)),
                       ),
                       child: Text(
-                        '登录',
+                        'login'.tr,
                         style: TextStyle(color: Colors.white),
                       )),
                 ),
@@ -151,7 +151,7 @@ class LoginPage extends GetView<LoginController> {
                         minimumSize: MaterialStateProperty.all(Size(double.infinity, 40)),
                       ),
                       child: Text(
-                        '注册',
+                        'register'.tr,
                         style: TextStyle(color: Colors.white),
                       )),
                 )

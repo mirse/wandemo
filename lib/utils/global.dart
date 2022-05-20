@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:wandemo/controller/app_controller.dart';
@@ -33,5 +34,23 @@ class Global{
 
   static bool getLoginState(){
     return loginInfoModel != null;
+  }
+
+  static saveLanguage(int value){
+    SpUtil.putInt(KEY_LANGUAGE, value);
+  }
+
+  static int? getLanguage(){
+    var value = SpUtil.getInt(KEY_LANGUAGE,defValue: 0);
+    return value;
+  }
+
+  static saveIfLightTheme(bool isLightTheme){
+    SpUtil.putBool(KEY_THEME, isLightTheme);
+  }
+
+  static bool? getIfLightTheme(){
+    var isLightTheme = SpUtil.getBool(KEY_THEME,defValue: true);
+    return isLightTheme;
   }
 }

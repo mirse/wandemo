@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
@@ -15,6 +16,7 @@ import 'package:wandemo/page/my_page.dart';
 import 'package:wandemo/page/project_page.dart';
 import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
+import 'package:wandemo/utils/app_theme.dart';
 import 'package:wandemo/utils/global.dart';
 import 'package:wandemo/utils/permission_utils.dart';
 import 'package:wandemo/utils/toast_utils.dart';
@@ -33,7 +35,6 @@ void main() async {
     print('permanentlyDenied');
   }, granted: () async {
     print('granted');
-
   });
   if (Platform.isAndroid) {
     var systemUi = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -46,26 +47,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: GetMaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
+    return OKToast(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: GetMaterialApp(
+            title: 'Flutter Demo',
+            //home: MainPage(),
+            initialRoute: '/',
+            //与home选其一
+            //routes:routes,
+            getPages: pages,
+            locale:
+                Global.getLanguage() == 0 ? Locale("zh", "CN") : Locale("en", "US"),
+            translations: Messages(),
+            fallbackLocale: Locale("zh", "CN"),
+            //默认语言
+            //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.light,
+            theme: Global.getIfLightTheme() == true ? lightTheme : darkTheme,
           ),
-          //home: MainPage(),
-          initialRoute: '/', //与home选其一
-          //routes:routes,
-          getPages: pages,
-          locale: Get.deviceLocale,
-          translations: Messages(),
-          fallbackLocale: Locale("en","US"),
-          //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
-
-          ),
-    );
+    ));
   }
 }
 
@@ -116,7 +120,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
-            title: Text('main'.tr),
+            title: Text('home'.tr),
             leading: Icon(Icons.home),
             onTap: () {
               Navigator.of(context).pop();
@@ -129,7 +133,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 1 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 1 ? Colors.blueAccent : Colors.grey,
-            title: Text('项目'),
+            title: Text('project'.tr),
             leading: Icon(Icons.local_fire_department),
             onTap: () {
               Navigator.of(context).pop();
@@ -142,7 +146,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 2 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 2 ? Colors.blueAccent : Colors.grey,
-            title: Text('分类'),
+            title: Text('type'.tr),
             leading: Icon(Icons.category_outlined),
             onTap: () {
               Navigator.of(context).pop();
@@ -155,7 +159,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 3 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 3 ? Colors.blueAccent : Colors.grey,
-            title: Text('我的'),
+            title: Text('me'.tr),
             leading: Icon(Icons.person),
             onTap: () {
               Navigator.of(context).pop();
@@ -170,7 +174,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   get _drawerHeader => Obx(() {
         return DrawerHeader(
           decoration: BoxDecoration(
-            color: Colors.blueAccent, //设置顶部背景颜色或图片
+            color: Theme.of(context).primaryColor, //设置顶部背景颜色或图片
           ),
           padding: EdgeInsets.all(0), // 此处能解决DrawerHeader为灰色的问题
           child: GestureDetector(
@@ -194,7 +198,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                               ? 'admin'
                               : Global.loginInfoModel!.nickname)
                           : 'admin',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      style: Theme.of(context).textTheme.headline1,
                     ),
                   )
                 ],
@@ -206,26 +210,24 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                 Get.toNamed('/login');
               } else {
                 Get.dialog(MyDialog(
-                  '退出登录',
-                  '确定',
+                  'logout'.tr,
+                  'ok'.tr,
                   () {
                     Get.back();
                     LoadingDialog.show();
-                    HttpManager().loginOut(success: (data){
-                      ToastUtils.showToast('退出登录成功');
+                    HttpManager().loginOut(success: (data) {
+                      ToastUtils.showToast('logout_success'.tr);
                       Global.clearUserInfo();
                       DioManager().clearCookieJar();
                       appController.setLoginState(LoginState.LOGIN_OUT);
                       LoadingDialog.dismiss();
-                    },fail:(errorCode,msg){
-                      ToastUtils.showToast('退出登录失败：${msg}');
+                    }, fail: (errorCode, msg) {
+                      ToastUtils.showToast('logout_fail'.tr+':$msg');
                       LoadingDialog.dismiss();
                     });
                   },
-                  cancelText: '取消',
-                  onCancel: (){
-
-                  },
+                  cancelText: 'cancel'.tr,
+                  onCancel: () {},
                 ));
               }
             },
@@ -239,12 +241,12 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         selectedItemColor: Colors.blue,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'.tr),
           BottomNavigationBarItem(
-              icon: Icon(Icons.local_fire_department), label: '项目'),
+              icon: Icon(Icons.local_fire_department), label: 'project'.tr),
           BottomNavigationBarItem(
-              icon: Icon(Icons.category_outlined), label: '分类'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
+              icon: Icon(Icons.category_outlined), label: 'type'.tr),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'me'.tr),
         ],
         onTap: (index) {
           setState(() {

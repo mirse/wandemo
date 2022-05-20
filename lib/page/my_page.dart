@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controller/app_controller.dart';
 import '../utils/global.dart';
@@ -7,25 +8,29 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blueGrey.shade300,
+      color: Theme.of(context).shadowColor,
       child: Column(
         children: [
-          _header,
+          _headerWidget(context),
           Container(
             margin: EdgeInsets.only(left: 15,right: 15),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.all(Radius.circular(20))
             ),
             child: Column(
               children: [
-                ListTile(title: Text('收藏'),leading: Image.asset('assets/imgs/ic_zan.png',width: 30,height: 30,),),
+                ListTile(title: Text('collect'.tr,style: Get.textTheme.bodyText1,),leading: Image.asset('assets/imgs/ic_zan.png',width: 30,height: 30,),),
                 Divider(),
-                ListTile(title: Text('排名'),leading: Image.asset('assets/imgs/ic_rank.png',width: 30,height: 30,),),
+                ListTile(title: Text('rank'.tr,style: Get.textTheme.bodyText1),leading: Image.asset('assets/imgs/ic_rank.png',width: 30,height: 30,),),
                 Divider(),
-                ListTile(title: Text('设置'),leading: Image.asset('assets/imgs/ic_setting.png',width: 30,height: 30,),),
+                ListTile(
+                  title: Text('setting'.tr,style: Get.textTheme.bodyText1),
+                  leading: Image.asset('assets/imgs/ic_setting.png',width: 30,height: 30,),
+                  onTap: ()=> Get.toNamed('/setting'),
+                ),
                 Divider(),
-                ListTile(title: Text('关于'),leading: Image.asset('assets/imgs/ic_about.png',width: 30,height: 30,),),
+                ListTile(title: Text('about'.tr,style: Get.textTheme.bodyText1),leading: Image.asset('assets/imgs/ic_about.png',width: 30,height: 30,),),
               ],
             ),
           )
@@ -34,14 +39,14 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  get _header{
+  Widget _headerWidget(context){
     return Container(
       margin: EdgeInsets.all(15),
       height: 200,
       width: double.infinity,
       //color: Colors.blueAccent,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).primaryColorLight,
         borderRadius: BorderRadius.all(Radius.circular(20))
       ),
       child: Column(
