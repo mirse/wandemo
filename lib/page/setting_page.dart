@@ -38,13 +38,15 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     var value = Global.getLanguage();
     _radioSelect = value;
+    var ifLightTheme = Global.getIfLightTheme();
+    ifLightTheme == null ? _switch = false:_switch = !ifLightTheme;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('setting'.tr,style: Get.textTheme.bodyText1,),
+        title: Text('setting'.tr,),
       ),
       body: Container(
         margin: EdgeInsets.all(15),
@@ -66,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
                   });
                 },
                 value: _switch,
-                activeColor: Colors.black,
+
               ),
             ),
             Divider(),
@@ -103,30 +105,3 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 }
-
-// class SettingPage extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('设置'),
-//       ),
-//       body: Container(
-//         margin: EdgeInsets.all(15),
-//         decoration: BoxDecoration(
-//             color: Colors.grey.shade200,
-//             borderRadius: BorderRadius.all(Radius.circular(20))
-//         ),
-//         child: Column(
-//           children: [
-//             ListTile(title: Text('暗黑模式'),trailing: Switch(onChanged: (bool value) {  }, value: null,),),
-//             Divider(),
-//             ListTile(title: Text('国际化'),),
-//             Divider(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-// }

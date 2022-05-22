@@ -141,7 +141,7 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
               alignment: Alignment.topLeft,
               child: Text(
                 data.title,
-                style: Get.textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
             Container(
@@ -180,7 +180,7 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10),
-                    child: Text(data.shareUser,style: Get.textTheme.bodyText2,),
+                    child: Text(data.shareUser,style: Theme.of(context).textTheme.bodyText2,),
                   )
                 ],
               ),
@@ -207,14 +207,14 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       setState(() {
 
       });
-      ToastUtils.showToast('collect_success'.tr);
+      ToastUtils.showMyToast('collect_success'.tr);
       LoadingDialog.dismiss();
     },fail: (errorCode,msg){
       mData.collect = false;
       setState(() {
 
       });
-      ToastUtils.showToast('collect_fail'.tr+':$msg');
+      ToastUtils.showMyToast('collect_fail'.tr+':$msg');
       LoadingDialog.dismiss();
     });
   }
@@ -228,14 +228,14 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
       setState(() {
 
       });
-      ToastUtils.showToast('uncollect_success'.tr);
+      ToastUtils.showMyToast('uncollect_success'.tr);
       LoadingDialog.dismiss();
     },fail: (errorCode,msg){
       mData.collect = true;
       setState(() {
 
       });
-      ToastUtils.showToast('uncollect_fail'.tr+':$msg');
+      ToastUtils.showMyToast('uncollect_fail'.tr+':$msg');
       LoadingDialog.dismiss();
     });
   }
@@ -259,7 +259,7 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin{
               width: 40,
             ),
             Container(
-              child: Text(name,style: Get.textTheme.bodyText2,),
+              child: Text(name,style: Theme.of(context).textTheme.bodyText2,),
             )
           ],
         ));

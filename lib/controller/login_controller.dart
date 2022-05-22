@@ -57,7 +57,7 @@ class LoginController extends GetxController {
         },fail:(errorCode,msg){
       print('login_fail'.tr+':$errorCode,$msg');
       LoadingDialog.dismiss();
-      ToastUtils.showToast('login_fail'.tr+msg);
+      ToastUtils.showMyToast('login_fail'.tr+msg);
     }
     );
   }

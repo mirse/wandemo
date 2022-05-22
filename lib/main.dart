@@ -216,13 +216,13 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                     Get.back();
                     LoadingDialog.show();
                     HttpManager().loginOut(success: (data) {
-                      ToastUtils.showToast('logout_success'.tr);
+                      ToastUtils.showMyToast('logout_success'.tr);
                       Global.clearUserInfo();
                       DioManager().clearCookieJar();
                       appController.setLoginState(LoginState.LOGIN_OUT);
                       LoadingDialog.dismiss();
                     }, fail: (errorCode, msg) {
-                      ToastUtils.showToast('logout_fail'.tr+':$msg');
+                      ToastUtils.showMyToast('logout_fail'.tr+':$msg');
                       LoadingDialog.dismiss();
                     });
                   },

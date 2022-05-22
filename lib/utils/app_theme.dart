@@ -13,7 +13,7 @@ ThemeData lightTheme = ThemeData.light().copyWith(
       bodyText1: TextStyle(color: Colors.black,fontSize: 15),
       bodyText2: TextStyle(color: Colors.black,fontSize: 12)
   ),
-  shadowColor: Colors.blueGrey.shade300,
+  shadowColor: Colors.blueGrey.shade100,
   cardColor: Colors.white,
 );
 

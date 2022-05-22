@@ -22,7 +22,7 @@ class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin
         children: [
           Container(
             child: _tabs,
-            color: Colors.white,
+            // color: Theme.of(context).cardColor,
           )
           ,Expanded(
             child: _tabBarView
