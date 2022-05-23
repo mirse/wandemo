@@ -36,10 +36,11 @@ class Messages extends Translations{
       'logout':'Logout',
       'logout_success':'Login out success',
       'logout_fail':'Login out fail',
-      'ok':'sure',
-      'cancel':'cancel',
+      'ok':'Sure',
+      'cancel':'Cancel',
 
-      'login_first':'login first'
+      'login_first':'Login first',
+      'loading':'Loading......'
     },
     'zh_CN':{
       'home':'首页',
@@ -76,7 +77,8 @@ class Messages extends Translations{
       'ok':'确定',
       'cancel':'取消',
 
-      'login_first':'请先登录'
+      'login_first':'请先登录',
+      'loading':'加载中......'
     }
 
 

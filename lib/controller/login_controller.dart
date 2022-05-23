@@ -10,7 +10,7 @@ import '../widget/dialog_widget.dart';
 import 'package:dio/dio.dart' as dio;
 
 class LoginController extends GetxController {
-  var _isObscure = false.obs;
+  var _isObscure = true.obs;
   var _isLoginBtnEnable = false.obs;
 
   String _userNameCache = '';
@@ -51,8 +51,7 @@ class LoginController extends GetxController {
           Global.saveUserInfo(data);
           appController.setLoginState(LoginState.LOGIN);
           LoadingDialog.dismiss();
-          showToast('login_success'.tr);
-          //ToastUtils.showToast('login_success'.tr);
+          ToastUtils.showMyToast('login_success'.tr);
           Get.back();
         },fail:(errorCode,msg){
       print('login_fail'.tr+':$errorCode,$msg');

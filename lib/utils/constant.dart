@@ -36,3 +36,4 @@ const MethodValues = {
 const String KEY_USER ="key_user";
 const String KEY_LANGUAGE ="key_language";
 const String KEY_THEME ="key_theme";
+const String KEY_ICON_PATH ="key_icon_path";

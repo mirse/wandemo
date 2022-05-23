@@ -120,13 +120,13 @@ class MyDialog extends StatelessWidget {
 }
 
 class LoadingDialog extends StatelessWidget {
-  String message;
 
-  LoadingDialog({required this.message});
+
+  LoadingDialog();
 
   //展示加载框
-  static void show({String message = '加载中......'}) {
-    Get.dialog(LoadingDialog(message: message));
+  static void show() {
+    Get.dialog(LoadingDialog());
   }
 
   //关闭加载框
@@ -143,6 +143,7 @@ class LoadingDialog extends StatelessWidget {
           width: 120,
           height: 100,
           decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
              borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -157,7 +158,7 @@ class LoadingDialog extends StatelessWidget {
                 height: 40,
               ),
               SizedBox(height: 10),
-              Text(message)
+              Text('loading'.tr)
             ],
           ),
         ),

@@ -20,6 +20,9 @@ class Global{
       loginInfoModel = LoginInfoModel.fromJson(data);
       appController.setLoginState(loginInfoModel != null?LoginState.LOGIN:LoginState.LOGIN_OUT);
     }
+
+    String? iconPath = SpUtil.getString(KEY_ICON_PATH);
+    appController.setIconPath(iconPath);
   }
 
   static saveUserInfo(LoginInfoModel loginInfo){
@@ -52,5 +55,14 @@ class Global{
   static bool? getIfLightTheme(){
     var isLightTheme = SpUtil.getBool(KEY_THEME,defValue: true);
     return isLightTheme;
+  }
+
+  static saveIconPath(String path){
+    SpUtil.putString(KEY_ICON_PATH, path);
+  }
+
+  static String? getIconPath(){
+    var path = SpUtil.getString(KEY_ICON_PATH,defValue: '');
+    return path;
   }
 }

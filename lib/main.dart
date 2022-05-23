@@ -184,11 +184,19 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               child: Row(
                 children: [
                   ClipOval(
-                    child: Image.asset(
+                    child: appController.mIconPath.isEmpty?Image.asset(
                       'assets/imgs/default_avatar.png',
                       width: 70,
                       height: 70,
+                      fit: BoxFit.cover,
+                    ):
+                    Image.file(
+                      File(appController.mIconPath),
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.cover,
                     ),
+
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 20),
