@@ -25,6 +25,11 @@ import 'package:wandemo/widget/dialog_widget.dart';
 import 'controller/login_controller.dart';
 import 'http/dio_manager.dart';
 
+/**
+ *  GetBuilder是手动状态管理器，需要更改时需要主动调用update(),内存消耗比较少
+ *  getX可以实现自动响应数据变化，相比Obx可以实现初始化controller.生命周期回收等，效率比GetBuilder、Obx低
+ *
+ */
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Global.init();
