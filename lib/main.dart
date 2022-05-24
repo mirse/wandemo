@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
             title: 'Flutter Demo',
             //home: MainPage(),
-            initialRoute: '/',
+            initialRoute: '/splash',
             //与home选其一
             //routes:routes,
             getPages: pages,

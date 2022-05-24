@@ -10,8 +10,10 @@ import 'package:wandemo/page/article_info_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
 import 'package:wandemo/page/setting_page.dart';
+import 'package:wandemo/page/splash_page.dart';
 
 List<GetPage> pages = [
+  GetPage(name: '/splash', page: () => SplashPage()),
   GetPage(name: '/', page: () => MainPage(),bindings: [ProjectBindings()]),
   GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
   GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
