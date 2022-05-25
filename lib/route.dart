@@ -15,7 +15,7 @@ import 'package:wandemo/page/splash_page.dart';
 
 List<GetPage> pages = [
   GetPage(name: '/splash', page: () => SplashPage()),
-  GetPage(name: '/', page: () => MainPage(),bindings: [ProjectBindings(),HomeBindings()]),
+  GetPage(name: '/home', page: () => MainPage(),bindings: [ProjectBindings(),HomeBindings()]),
   GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
   GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
   GetPage(name: '/setting', page: () => SettingPage()),
