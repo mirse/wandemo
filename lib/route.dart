@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:wandemo/bindings/home_bindings.dart';
 import 'package:wandemo/bindings/login_bindings.dart';
 import 'package:wandemo/bindings/project_bindings.dart';
 import 'package:wandemo/bindings/project_info_bindings.dart';
@@ -14,7 +15,7 @@ import 'package:wandemo/page/splash_page.dart';
 
 List<GetPage> pages = [
   GetPage(name: '/splash', page: () => SplashPage()),
-  GetPage(name: '/', page: () => MainPage(),bindings: [ProjectBindings()]),
+  GetPage(name: '/', page: () => MainPage(),bindings: [ProjectBindings(),HomeBindings()]),
   GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
   GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
   GetPage(name: '/setting', page: () => SettingPage()),

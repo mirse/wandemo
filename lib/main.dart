@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,6 +45,13 @@ void main() async {
   if (Platform.isAndroid) {
     var systemUi = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUi);
+
+    //todo flutter 使用setEnabledSystemUIMode在某些机型上状态栏出现黑条，https://github.com/flutter/flutter/issues/64274，
+    //todo 修改MainActivity代码如何生效
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+    //     overlays: [
+    //       SystemUiOverlay.bottom, SystemUiOverlay.top
+    //     ]);
   }
 }
 
@@ -52,29 +60,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: GetMaterialApp(
-            title: 'Flutter Demo',
-            //home: MainPage(),
-            initialRoute: '/splash',
-            //与home选其一
-            //routes:routes,
-            getPages: pages,
-            locale:
-                Global.getLanguage() == 0 ? Locale("zh", "CN") : Locale("en", "US"),
-            translations: Messages(),
-            fallbackLocale: Locale("zh", "CN"),
-            //默认语言
-            //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.light,
-            theme: Global.getIfLightTheme() == true ? lightTheme : darkTheme,
-          ),
-    ));
+    return ScreenUtilInit(
+        designSize: Size(360, 640),
+        builder: (ctx, widget) => OKToast(
+            child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: GetMaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Flutter Demo',
+                  //home: MainPage(),
+                  initialRoute: '/splash',
+                  //与home选其一
+                  //routes:routes,
+                  getPages: pages,
+                  locale: Global.getLanguage() == 0
+                      ? Locale("zh", "CN")
+                      : Locale("en", "US"),
+                  translations: Messages(),
+                  fallbackLocale: Locale("zh", "CN"),
+                  //默认语言
+                  //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
+                  darkTheme: darkTheme,
+                  themeMode: ThemeMode.light,
+                  theme:
+                      Global.getIfLightTheme() == true ? lightTheme : darkTheme,
+                ))));
   }
 }
 
@@ -189,19 +201,19 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               child: Row(
                 children: [
                   ClipOval(
-                    child: appController.mIconPath.isEmpty?Image.asset(
-                      'assets/imgs/default_avatar.png',
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                    ):
-                    Image.file(
-                      File(appController.mIconPath),
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                    ),
-
+                    child: appController.mIconPath.isEmpty
+                        ? Image.asset(
+                            'assets/imgs/default_avatar.png',
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(appController.mIconPath),
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 20),
@@ -235,7 +247,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       appController.setLoginState(LoginState.LOGIN_OUT);
                       LoadingDialog.dismiss();
                     }, fail: (errorCode, msg) {
-                      ToastUtils.showMyToast('logout_fail'.tr+':$msg');
+                      ToastUtils.showMyToast('logout_fail'.tr + ':$msg');
                       LoadingDialog.dismiss();
                     });
                   },
