@@ -10,6 +10,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../utils/app_theme.dart';
 
 class SplashPage extends StatefulWidget {
+
   const SplashPage({Key? key}) : super(key: key);
 
   @override
