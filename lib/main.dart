@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
@@ -25,6 +26,7 @@ import 'package:wandemo/widget/dialog_widget.dart';
 
 import 'controller/login_controller.dart';
 import 'http/dio_manager.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /**
  *  GetBuilder是手动状态管理器，需要更改时需要主动调用update(),内存消耗比较少
@@ -60,6 +62,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+
+      //initialRoute: '/login',
+      //home: LoginPage(),
+
+      localizationsDelegates: [
+        AppLocalizations.delegate, //
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English, no country code
+        Locale('zh', ''), // Spanish, no country code
+      ],
+      onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
+
+    );
+
     return ScreenUtilInit(
         designSize: Size(360, 640),
         builder: (ctx, widget) => OKToast(
@@ -67,25 +90,32 @@ class MyApp extends StatelessWidget {
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
-                child: GetMaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: 'Flutter Demo',
-                  //home: MainPage(),
-                  initialRoute: '/splash',
-                  //与home选其一
-                  //routes:routes,
-                  getPages: pages,
-                  locale: Global.getLanguage() == 0
-                      ? Locale("zh", "CN")
-                      : Locale("en", "US"),
-                  translations: Messages(),
-                  fallbackLocale: Locale("zh", "CN"),
-                  //默认语言
-                  //onGenerateRoute: onGenerateRoute //当routes不配置走onGenerateRoute
-                  darkTheme: darkTheme,
-                  themeMode: ThemeMode.light,
-                  theme:
-                      Global.getIfLightTheme() == true ? lightTheme : darkTheme,
+                child: MaterialApp(
+                  // debugShowCheckedModeBanner: false,
+                  // title: 'Flutter Demo',
+                  // //home: MainPage(),
+                  // initialRoute: '/login',
+                  // //与home选其一
+                  // //routes:routes,
+                  // //getPages: pages,
+                  // // locale: Global.getLanguage() == 0
+                  // //     ? Locale("zh", "CN")
+                  // //     : Locale("en", "US"),
+                  // localizationsDelegates: [
+                  //   AppLocalizations.delegate, //
+                  //   GlobalMaterialLocalizations.delegate,
+                  //   GlobalWidgetsLocalizations.delegate,
+                  //   GlobalCupertinoLocalizations.delegate,
+                  // ],
+                  // supportedLocales: [
+                  //   Locale('en', ''), // English, no country code
+                  //   Locale('zh', ''), // Spanish, no country code
+                  // ],
+                  // onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
+                  // darkTheme: darkTheme,
+                  // themeMode: ThemeMode.light,
+                  // theme:
+                  //     Global.getIfLightTheme() == true ? lightTheme : darkTheme,
                 ))));
   }
 }

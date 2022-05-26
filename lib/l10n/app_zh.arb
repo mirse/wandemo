@@ -1,0 +1,6 @@
+{
+    "login": "登录",
+       "@helloWorld": {
+          "description": "The conventional newborn programmer greeting"
+        }
+}

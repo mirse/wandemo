@@ -28,6 +28,9 @@ final routes = {
         //arguments: arguments,
       ),
   '/login': (context) => LoginPage(),
+  '/splash': (context) => SplashPage(),
+  '/home': (context) => MainPage(),
+  '/setting': (context) => SettingPage(),
 };
 
 var onGenerateRoute = (RouteSettings settings) {
