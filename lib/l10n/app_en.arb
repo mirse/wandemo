@@ -1,6 +1,39 @@
 {
-     "login": "login",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    }
+      'home':'Home',
+           'project':'Project',
+           'type':'Type',
+           'me':'Me',
+
+           'collect':'Collect',
+           'rank':'Rank',
+           'setting':'Setting',
+           'about':'About',
+
+           'darkMode':'Dark Mode',
+           'globalization':'Globalization',
+           'chinese':'Chinese',
+           'english':'English',
+
+           'account':'Account',
+           'input_account':'Input Account Please',
+           'pwd':'Password',
+           'input_pwd':'Input Password Please',
+           'login':'Login',
+           'register':'Register',
+           'login_success':'Login Success',
+           'login_fail':'Login Fail',
+           'collect_success':'Collect Success',
+           'collect_fail':'Collect Fail',
+           'uncollect_success':'UnCollect Success',
+           'uncollect_fail':'UnCollect Success',
+
+           'logout':'Logout',
+           'logout_success':'Login out success',
+           'logout_fail':'Login out fail',
+           'ok':'Sure',
+           'cancel':'Cancel',
+
+           'login_first':'Login first',
+           'loading':'Loading......'
+
 }

@@ -16,6 +16,7 @@ import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
 import 'package:wandemo/page/project_page.dart';
+import 'package:wandemo/page/setting_page.dart';
 import 'package:wandemo/page/sort_page.dart';
 import 'package:wandemo/route.dart';
 import 'package:wandemo/utils/app_theme.dart';
@@ -67,17 +68,17 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
 
       //initialRoute: '/login',
-      //home: LoginPage(),
+      home: SettingPage(),
 
       localizationsDelegates: [
         AppLocalizations.delegate, //
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,// 指定本地化的字符串和一些其他的值
+        GlobalWidgetsLocalizations.delegate,// 对应的Cupertino风格
+        GlobalCupertinoLocalizations.delegate,// 指定默认的文本排列方向, 由左到右或由右到左
       ],
       supportedLocales: [
-        Locale('en', ''), // English, no country code
-        Locale('zh', ''), // Spanish, no country code
+        Locale('en', 'US'),
+        Locale('zh', 'CN'),
       ],
       onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
 
