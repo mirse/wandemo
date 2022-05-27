@@ -125,13 +125,21 @@ class LoadingDialog extends StatelessWidget {
   LoadingDialog();
 
   //展示加载框
-  static void show() {
-    Get.dialog(LoadingDialog());
+  static void show(ctx) {
+    showDialog(context: ctx, builder: (ctx){
+      return LoadingDialog();
+    });
+
   }
 
   //关闭加载框
   static void dismiss() {
     Get.back();
+  }
+
+  //关闭加载框
+  static void dismissDialog(ctx) {
+    Navigator.pop(ctx);
   }
 
   @override

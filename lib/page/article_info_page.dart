@@ -3,7 +3,8 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 
 class ArticleInfoPage extends StatelessWidget {
-  ArticleInfoPage({Key? key}) : super(key: key);
+  final arguments;
+  ArticleInfoPage({Key? key, this.arguments}) : super(key: key);
   var _url = '';
   var _title = '';
 
@@ -24,8 +25,8 @@ class ArticleInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _url = Get.arguments['link'];
-    _title = Get.arguments['title'];
+    _url = arguments['link'];
+    _title = arguments['title'];
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),

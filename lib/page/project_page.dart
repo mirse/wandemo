@@ -1,40 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:wandemo/controller/project_controller.dart';
-import 'package:wandemo/http/http_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:wandemo/notifier/project_notifier.dart';
 import 'package:wandemo/page/project_info_page.dart';
 
-import '../../model/project_model.dart';
-
-class ProjectPage extends GetView<ProjectController>{
+class ProjectPage extends StatefulWidget {
   const ProjectPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Obx((){
-      return Container(
-        child: Column(
-          children: [
-            Container(
-              child: _tabs,
-              // color: Theme.of(context).cardColor,
-            )
-            ,Expanded(
-                child: _tabBarView
-            )
-          ],
-        ),
-      );
-    });
+  _ProjectPageState createState() => _ProjectPageState();
+}
+
+class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin{
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //tabController = TabController(vsync: this, length: _categoryList.length);
+
   }
 
-  get _tabs {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (ctx) => ProjectNotifier(ctx),
+      child: Consumer(
+        builder: (BuildContext context, value, Widget? child) {
+          return Container(
+            child: Column(
+              children: [
+                Container(
+                  child: tabs(context),
+                  // color: Theme.of(context).cardColor,
+                )
+                ,Expanded(
+                    child: tabBarView(context)
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget tabs(notifier){
     return TabBar(
       unselectedLabelColor: Colors.black,
       labelColor: Colors.blue,
       isScrollable: true,
-      controller: controller.tabController,
-      tabs: controller.categoryList.map((e) {
+      controller: notifier.tabController,
+      tabs: notifier.categoryList.map((e) {
         return Tab(
           child: Text(e.name),
         );
@@ -45,13 +61,15 @@ class ProjectPage extends GetView<ProjectController>{
     );
   }
 
-  get _tabBarView {
+  Widget tabBarView(notifier) {
     return TabBarView(
-      controller: controller.tabController,
-      children: controller.categoryList.map((e) {
+      controller: notifier.tabController,
+      children: notifier.categoryList.map((e) {
         return ProjectInfoPage(e.id);
       }).toList(),
     );
   }
 }
+
+
 

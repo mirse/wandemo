@@ -40,7 +40,7 @@ class MyPage extends GetView<AppController> {
                     title: Text('setting'.tr, style: Get.textTheme.bodyText1),
                     leading: Image.asset(
                       'assets/imgs/ic_setting.png', width: 30, height: 30,),
-                    onTap: () => Get.toNamed('/setting'),
+                    onTap: () => Navigator.pushNamed(context, '/setting'),
                   ),
                   Divider(),
                   ListTile(

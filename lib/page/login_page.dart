@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:wandemo/generated/l10n.dart';
 import 'package:wandemo/notifier/login_notifier.dart';
-import '../controller/login_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController();
@@ -19,7 +18,7 @@ class LoginPage extends StatelessWidget {
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             ),
             child: ChangeNotifierProvider(
-                create: (ctx) => LoginNotifier(),
+                create: (ctx) => LoginNotifier(context),
                 child: Consumer<LoginNotifier>(
                   builder: (ctx, login, child) {
                     return Column(
@@ -33,8 +32,8 @@ class LoginPage extends StatelessWidget {
                               child: TextField(
                                 decoration: InputDecoration(
                                   //去除下划线
-                                  labelText: 'account'.tr,
-                                  hintText: 'input_account'.tr,
+                                  labelText: S.of(context).account,
+                                  hintText: S.of(context).input_account,
                                   filled: true,
                                   //是否填充
                                   // fillColor: Colors.grey,//填充颜色
@@ -76,8 +75,8 @@ class LoginPage extends StatelessWidget {
                               child: TextField(
                                 decoration: InputDecoration(
                                   //去除下划线
-                                  labelText: 'pwd'.tr,
-                                  hintText: 'input_pwd'.tr,
+                                  labelText: S.of(context).pwd,
+                                  hintText: S.of(context).input_pwd,
                                   filled: true,
                                   //是否填充
                                   // fillColor: Colors.grey,//填充颜色
@@ -142,7 +141,7 @@ class LoginPage extends StatelessWidget {
                                     Size(double.infinity, 40)),
                               ),
                               child: Text(
-                                AppLocalizations.of(context)!.login,
+                                S.of(context).login,
                                 style: TextStyle(color: Colors.white),
                               )),
                         ),
@@ -165,7 +164,7 @@ class LoginPage extends StatelessWidget {
                                     Size(double.infinity, 40)),
                               ),
                               child: Text(
-                                'register'.tr,
+                                S.of(context).register,
                                 style: TextStyle(color: Colors.white),
                               )),
                         )

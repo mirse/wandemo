@@ -1,7 +1,9 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../controller/app_controller.dart';
+import '../generated/l10n.dart';
 import '../http/http_manager.dart';
 import '../utils/global.dart';
 import '../utils/toast_utils.dart';
@@ -10,6 +12,7 @@ import '../widget/dialog_widget.dart';
 class LoginNotifier extends ChangeNotifier{
   var _isObscure = true;
   var _isLoginBtnEnable = false;
+  var ctx;
 
   String _userNameCache = '';
   String _pwdCache = '';
@@ -20,6 +23,8 @@ class LoginNotifier extends ChangeNotifier{
   //密码栏是否可见
   bool get isObscure =>_isObscure;
 
+
+  LoginNotifier(this.ctx);
   //用户名
   set setUserNameCache(userName){
     _userNameCache = userName;
@@ -43,7 +48,7 @@ class LoginNotifier extends ChangeNotifier{
 
   //登录
   void login(){
-    LoadingDialog.show();
+    LoadingDialog.show(ctx);
     HttpManager().login(
         data: FormData.fromMap(
           {'username':_userNameCache,'password':_pwdCache},
@@ -51,13 +56,13 @@ class LoginNotifier extends ChangeNotifier{
         success: (data){
           Global.saveUserInfo(data);
           appController.setLoginState(LoginState.LOGIN);
-          LoadingDialog.dismiss();
-          // ToastUtils.showMyToast('login_success');
-          // Get.back();
+          LoadingDialog.dismissDialog(ctx);
+          ToastUtils.showMyToast(S.of(ctx).login_success);
+          Navigator.pop(ctx);
         },fail:(errorCode,msg){
 
-      LoadingDialog.dismiss();
-      //ToastUtils.showMyToast('login_fail'.tr+msg);
+      LoadingDialog.dismissDialog(ctx);
+      ToastUtils.showMyToast(S.of(ctx).login_fail+":"+msg);
     }
     );
   }

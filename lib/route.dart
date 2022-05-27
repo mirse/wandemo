@@ -15,17 +15,19 @@ import 'package:wandemo/page/splash_page.dart';
 
 List<GetPage> pages = [
   GetPage(name: '/splash', page: () => SplashPage()),
-  GetPage(name: '/home', page: () => MainPage(),bindings: [ProjectBindings(),HomeBindings()]),
+  GetPage(
+      name: '/home',
+      page: () => MainPage(),
+      bindings: [ProjectBindings(), HomeBindings()]),
   GetPage(name: '/articleInfo', page: () => ArticleInfoPage()),
-  GetPage(name: '/login', page: () => LoginPage(),binding: LoginBindings()),
+  GetPage(name: '/login', page: () => LoginPage(), binding: LoginBindings()),
   GetPage(name: '/setting', page: () => SettingPage()),
 ];
 
-
 final routes = {
-  //"/": (context, {arguments}) => MainPage(),
+  "/": (context, {arguments}) => MainPage(),
   '/articleInfo': (context, {arguments}) => ArticleInfoPage(
-        //arguments: arguments,
+        arguments: arguments,
       ),
   '/login': (context) => LoginPage(),
   '/splash': (context) => SplashPage(),
@@ -46,9 +48,10 @@ var onGenerateRoute = (RouteSettings settings) {
       return route;
     } else {
       final Route route =
-      MaterialPageRoute(builder: (context) => pageContentBuilder(context));
+          MaterialPageRoute(builder: (context) => pageContentBuilder(context));
       return route;
     }
   }
-  return MaterialPageRoute(builder: (context) => MyApp());;
+  return MaterialPageRoute(builder: (context) => MyApp());
+  ;
 };

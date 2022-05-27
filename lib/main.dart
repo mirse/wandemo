@@ -9,9 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/messages.dart';
+import 'package:wandemo/notifier/login_notifier.dart';
+import 'package:wandemo/notifier/setting_notifier.dart';
 import 'package:wandemo/page/home_page.dart';
 import 'package:wandemo/page/login_page.dart';
 import 'package:wandemo/page/my_page.dart';
@@ -26,8 +29,8 @@ import 'package:wandemo/utils/toast_utils.dart';
 import 'package:wandemo/widget/dialog_widget.dart';
 
 import 'controller/login_controller.dart';
+import 'generated/l10n.dart';
 import 'http/dio_manager.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /**
  *  GetBuilder是手动状态管理器，需要更改时需要主动调用update(),内存消耗比较少
@@ -37,18 +40,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Global.init();
-  runApp(const MyApp());
-  PermissionUtils.requestPermission(Permission.storage, denied: () {
-    print('denied');
-  }, permanentlyDenied: () {
-    print('permanentlyDenied');
-  }, granted: () async {
-    print('granted');
-  });
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<SettingNotifier>(create: (ctx) => SettingNotifier()),
+    ],
+    child: MyApp(),
+  ));
+  _requestPermission();
   if (Platform.isAndroid) {
     var systemUi = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUi);
-
     //todo flutter 使用setEnabledSystemUIMode在某些机型上状态栏出现黑条，https://github.com/flutter/flutter/issues/64274，
     //todo 修改MainActivity代码如何生效
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
@@ -58,31 +59,59 @@ void main() async {
   }
 }
 
+void _requestPermission(){
+  PermissionUtils.requestPermission(Permission.storage, denied: () {
+    print('denied');
+  }, permanentlyDenied: () {
+    print('permanentlyDenied');
+  }, granted: () async {
+    print('granted');
+  });
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+    print('MyApp build');
+    return ScreenUtilInit(
+        designSize: Size(360,640),
+        builder: (ctx,widget) => OKToast(
+            child: GestureDetector(
+              onTap: (){
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: Consumer<SettingNotifier>(
+                  builder: (ctx,local,child){
+                    return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        title: 'Flutter Demo',
+                        //routes: routes,
+                        //initialRoute: '/',
+                        home: MainPage(),
+                        locale:
+                        local.local,
+                        // Global.getLanguage() == 0 ? Locale("zh", "CN") : Locale("en", "US"),
+                        localizationsDelegates: [
+                          GlobalMaterialLocalizations.delegate, // 指定本地化的字符串和一些其他的值
+                          GlobalWidgetsLocalizations.delegate, // 对应的Cupertino风格
+                          GlobalCupertinoLocalizations.delegate, // 指定默认的文本排列方向, 由左到右或由右到左
+                          S.delegate
+                        ],
+                        supportedLocales: S.delegate.supportedLocales,
+                        onGenerateRoute: onGenerateRoute,
+                        //当routes不配置走onGenerateRoute
 
-      //initialRoute: '/login',
-      home: SettingPage(),
-
-      localizationsDelegates: [
-        AppLocalizations.delegate, //
-        GlobalMaterialLocalizations.delegate,// 指定本地化的字符串和一些其他的值
-        GlobalWidgetsLocalizations.delegate,// 对应的Cupertino风格
-        GlobalCupertinoLocalizations.delegate,// 指定默认的文本排列方向, 由左到右或由右到左
-      ],
-      supportedLocales: [
-        Locale('en', 'US'),
-        Locale('zh', 'CN'),
-      ],
-      onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
-
-    );
+                        darkTheme: darkTheme,
+                        themeMode: ThemeMode.light,
+                        theme:
+                        local.theme
+                      // Global.getIfLightTheme() == true ? lightTheme : darkTheme,
+                    );
+                  }),
+            )
+        ));
 
     return ScreenUtilInit(
         designSize: Size(360, 640),
@@ -92,32 +121,32 @@ class MyApp extends StatelessWidget {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: MaterialApp(
-                  // debugShowCheckedModeBanner: false,
-                  // title: 'Flutter Demo',
-                  // //home: MainPage(),
-                  // initialRoute: '/login',
-                  // //与home选其一
-                  // //routes:routes,
-                  // //getPages: pages,
-                  // // locale: Global.getLanguage() == 0
-                  // //     ? Locale("zh", "CN")
-                  // //     : Locale("en", "US"),
-                  // localizationsDelegates: [
-                  //   AppLocalizations.delegate, //
-                  //   GlobalMaterialLocalizations.delegate,
-                  //   GlobalWidgetsLocalizations.delegate,
-                  //   GlobalCupertinoLocalizations.delegate,
-                  // ],
-                  // supportedLocales: [
-                  //   Locale('en', ''), // English, no country code
-                  //   Locale('zh', ''), // Spanish, no country code
-                  // ],
-                  // onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
-                  // darkTheme: darkTheme,
-                  // themeMode: ThemeMode.light,
-                  // theme:
-                  //     Global.getIfLightTheme() == true ? lightTheme : darkTheme,
-                ))));
+                    // debugShowCheckedModeBanner: false,
+                    // title: 'Flutter Demo',
+                    // //home: MainPage(),
+                    // initialRoute: '/login',
+                    // //与home选其一
+                    // //routes:routes,
+                    // //getPages: pages,
+                    // locale: Global.getLanguage() == 0
+                    //     ? Locale("zh", "CN")
+                    //     : Locale("en", "US"),
+                    // localizationsDelegates: [
+                    //   AppLocalizations.delegate, //
+                    //   GlobalMaterialLocalizations.delegate,
+                    //   GlobalWidgetsLocalizations.delegate,
+                    //   GlobalCupertinoLocalizations.delegate,
+                    // ],
+                    // supportedLocales: [
+                    //   Locale('en', ''), // English, no country code
+                    //   Locale('zh', ''), // Spanish, no country code
+                    // ],
+                    // onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
+                    // darkTheme: darkTheme,
+                    // themeMode: ThemeMode.light,
+                    // theme:
+                    //     Global.getIfLightTheme() == true ? lightTheme : darkTheme,
+                    ))));
   }
 }
 
@@ -168,7 +197,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
-            title: Text('home'.tr),
+            title: Text(S.of(context).home),
             leading: Icon(Icons.home),
             onTap: () {
               Navigator.of(context).pop();
@@ -181,7 +210,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 1 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 1 ? Colors.blueAccent : Colors.grey,
-            title: Text('project'.tr),
+            title: Text(S.of(context).project),
             leading: Icon(Icons.local_fire_department),
             onTap: () {
               Navigator.of(context).pop();
@@ -194,7 +223,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 2 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 2 ? Colors.blueAccent : Colors.grey,
-            title: Text('type'.tr),
+            title: Text(S.of(context).type),
             leading: Icon(Icons.category_outlined),
             onTap: () {
               Navigator.of(context).pop();
@@ -207,7 +236,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ListTile(
             textColor: curIndex == 3 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 3 ? Colors.blueAccent : Colors.grey,
-            title: Text('me'.tr),
+            title: Text(S.of(context).me),
             leading: Icon(Icons.person),
             onTap: () {
               Navigator.of(context).pop();
@@ -263,26 +292,26 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             onTap: () {
               //点击drawer首栏
               if (!appController.isLogin) {
-                Get.toNamed('/login');
+                Navigator.pushNamed(context, '/login');
               } else {
                 Get.dialog(MyDialog(
-                  'logout'.tr,
-                  'ok'.tr,
+                  S.of(context).logout,
+                    S.of(context).ok,
                   () {
                     Get.back();
-                    LoadingDialog.show();
+                    LoadingDialog.show(context);
                     HttpManager().loginOut(success: (data) {
-                      ToastUtils.showMyToast('logout_success'.tr);
+                      ToastUtils.showMyToast(S.of(context).logout_success);
                       Global.clearUserInfo();
                       DioManager().clearCookieJar();
                       appController.setLoginState(LoginState.LOGIN_OUT);
                       LoadingDialog.dismiss();
                     }, fail: (errorCode, msg) {
-                      ToastUtils.showMyToast('logout_fail'.tr + ':$msg');
+                      ToastUtils.showMyToast(S.of(context).logout_fail);
                       LoadingDialog.dismiss();
                     });
                   },
-                  cancelText: 'cancel'.tr,
+                  cancelText: S.of(context).cancel,
                   onCancel: () {},
                 ));
               }
@@ -297,12 +326,12 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         selectedItemColor: Colors.blue,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'.tr),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: S.of(context).home),
           BottomNavigationBarItem(
-              icon: Icon(Icons.local_fire_department), label: 'project'.tr),
+              icon: Icon(Icons.local_fire_department), label: S.of(context).project),
           BottomNavigationBarItem(
-              icon: Icon(Icons.category_outlined), label: 'type'.tr),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'me'.tr),
+              icon: Icon(Icons.category_outlined), label: S.of(context).type),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: S.of(context).me),
         ],
         onTap: (index) {
           setState(() {

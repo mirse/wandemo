@@ -42,7 +42,7 @@ class LoginController extends GetxController {
 
   //登录
   void login(){
-    LoadingDialog.show();
+    //LoadingDialog.show();
     HttpManager().login(
         data: dio.FormData.fromMap(
           {'username':_userNameCache,'password':_pwdCache},

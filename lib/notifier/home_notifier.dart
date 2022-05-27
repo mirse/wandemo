@@ -1,25 +1,32 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:sp_util/sp_util.dart';
 
+import '../generated/l10n.dart';
 import '../http/http_manager.dart';
-import '../model/article_model.dart';
 import '../model/banner_model.dart';
+import '../utils/app_theme.dart';
+import '../utils/global.dart';
 import '../utils/toast_utils.dart';
 import '../widget/dialog_widget.dart';
-import 'app_controller.dart';
 
-class HomeController extends GetxController{
+
+class HomeNotifier extends ChangeNotifier{
+
   ScrollController scrollController = ScrollController();
-  RxList articleList = [].obs;
-  RxList httpImg = [].obs;
+  List articleList = [];
+  List httpImg = [];
   int _articlePage = 0;
+  var ctx;
 
   set articlePage(articlePage){
     _articlePage = articlePage;
   }
 
-  @override
-  void onInit() {
+
+  HomeNotifier(this.ctx){
     _articlePage = 0;
     getArticle();
     getBanner();
@@ -31,20 +38,20 @@ class HomeController extends GetxController{
         getArticle();
       }
     });
-
-    ever(appController.loginState, (callBack) {
-      //每次登录状态发生变化，都要重新请求广场数据
-      _articlePage = 0;
-      getArticle();
-    });
+    // ever(appController.loginState, (callBack) {
+    //   //每次登录状态发生变化，都要重新请求广场数据
+    //   _articlePage = 0;
+    //   getArticle();
+    // });
   }
 
   void getBanner(){
     HttpManager().getBanner<BannerModel>(success:(data){
-      httpImg.value = data;
+      httpImg = data;
     },fail: (errorCode,msg){
 
     });
+    notifyListeners();
   }
 
   Future getArticle() {
@@ -55,47 +62,57 @@ class HomeController extends GetxController{
         articleList.clear();
       }
       articleList.addAll(data);
+      notifyListeners();
     },fail: (errorCode,msg){
 
     });
+
   }
 
   void collectArticle(int index) {
-    //LoadingDialog.show();
+    LoadingDialog.show(ctx);
     HttpManager().collectArticleIn(params: {
       'id':articleList[index].id
     },success: (data){
       articleList[index].collect = true;
       //todo obx List刷新方法
-      articleList.refresh();
-      ToastUtils.showMyToast('collect_success'.tr);
-      LoadingDialog.dismiss();
+      // articleList.refresh();
+      ToastUtils.showMyToast(S.of(ctx).collect_success);
+      LoadingDialog.dismissDialog(ctx);
+      notifyListeners();
     },fail: (errorCode,msg){
       articleList[index].collect = false;
-      articleList.refresh();
-      ToastUtils.showMyToast('collect_fail'.tr+':$msg');
-      LoadingDialog.dismiss();
+      // articleList.refresh();
+      ToastUtils.showMyToast(S.of(ctx).collect_fail+':$msg');
+      notifyListeners();
+      LoadingDialog.dismissDialog(ctx);
     });
+
   }
 
   void unCollectArticle(int index) {
-    //LoadingDialog.show();
+    LoadingDialog.show(ctx);
     HttpManager().unCollectArticleIn(params: {
       'id':articleList[index].id
     },success: (data){
       articleList[index].collect = false;
-      articleList.refresh();
-      ToastUtils.showMyToast('uncollect_success'.tr);
-      LoadingDialog.dismiss();
+      // articleList.refresh();
+      ToastUtils.showMyToast(S.of(ctx).uncollect_success);
+      LoadingDialog.dismissDialog(ctx);
+      notifyListeners();
     },fail: (errorCode,msg){
       articleList[index].collect = true;
-      articleList.refresh();
-      ToastUtils.showMyToast('uncollect_fail'.tr+':$msg');
-      LoadingDialog.dismiss();
+      // articleList.refresh();
+      ToastUtils.showMyToast(S.of(ctx).uncollect_fail+':$msg');
+      LoadingDialog.dismissDialog(ctx);
+      notifyListeners();
     });
+
   }
 
   bool getIsCollect(index){
     return articleList[index].collect;
   }
+
+
 }
