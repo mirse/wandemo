@@ -74,7 +74,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('MyApp build');
     return ScreenUtilInit(
         designSize: Size(360,640),
         builder: (ctx,widget) => OKToast(
@@ -294,26 +293,29 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               if (!appController.isLogin) {
                 Navigator.pushNamed(context, '/login');
               } else {
-                Get.dialog(MyDialog(
-                  S.of(context).logout,
+                showDialog(context: context, builder: (_){
+                  return MyDialog(
+                    context,
+                    S.of(context).logout,
                     S.of(context).ok,
-                  () {
-                    Get.back();
-                    LoadingDialog.show(context);
-                    HttpManager().loginOut(success: (data) {
-                      ToastUtils.showMyToast(S.of(context).logout_success);
-                      Global.clearUserInfo();
-                      DioManager().clearCookieJar();
-                      appController.setLoginState(LoginState.LOGIN_OUT);
-                      LoadingDialog.dismiss();
-                    }, fail: (errorCode, msg) {
-                      ToastUtils.showMyToast(S.of(context).logout_fail);
-                      LoadingDialog.dismiss();
-                    });
-                  },
-                  cancelText: S.of(context).cancel,
-                  onCancel: () {},
-                ));
+                        () {
+                      Navigator.pop(context);
+                      LoadingDialog.show(context);
+                      HttpManager().loginOut(success: (data) {
+                        ToastUtils.showMyToast(S.of(context).logout_success);
+                        Global.clearUserInfo();
+                        DioManager().clearCookieJar();
+                        appController.setLoginState(LoginState.LOGIN_OUT);
+                        LoadingDialog.dismissDialog(context);
+                      }, fail: (errorCode, msg) {
+                        ToastUtils.showMyToast(S.of(context).logout_fail);
+                        LoadingDialog.dismissDialog(context);
+                      });
+                    },
+                    cancelText: S.of(context).cancel,
+                    onCancel: () {},
+                  );
+                });
               }
             },
           ),

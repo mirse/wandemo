@@ -12,8 +12,9 @@ class MyDialog extends StatelessWidget {
   late String sureText;
   OnSure onSure;
   OnCancel? onCancel;
+  var ctx;
 
-  MyDialog(this.content, this.sureText, this.onSure,
+  MyDialog(this.ctx,this.content, this.sureText, this.onSure,
       {this.title, this.cancelText, this.onCancel});
 
   List<Widget> get _bottomWidget {
@@ -31,7 +32,7 @@ class MyDialog extends StatelessWidget {
               style: TextStyle(color: Colors.grey),
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(ctx);
               onCancel;
             },
           ),

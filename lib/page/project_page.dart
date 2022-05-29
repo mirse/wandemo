@@ -11,30 +11,27 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin{
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    //tabController = TabController(vsync: this, length: _categoryList.length);
-
-  }
+  var tabController;
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
-      create: (ctx) => ProjectNotifier(ctx),
-      child: Consumer(
+      create: (ctx){
+        print('ProjectNotifier build');
+        return ProjectNotifier(this);
+      },
+      child: Consumer<ProjectNotifier>(
         builder: (BuildContext context, value, Widget? child) {
           return Container(
             child: Column(
               children: [
                 Container(
-                  child: tabs(context),
+                  child: tabs(value),
                   // color: Theme.of(context).cardColor,
                 )
                 ,Expanded(
-                    child: tabBarView(context)
+                    child: tabBarView(value)
                 )
               ],
             ),
@@ -44,13 +41,14 @@ class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin
     );
   }
 
-  Widget tabs(notifier){
+  Widget tabs(ProjectNotifier notifier){
     return TabBar(
       unselectedLabelColor: Colors.black,
       labelColor: Colors.blue,
       isScrollable: true,
       controller: notifier.tabController,
-      tabs: notifier.categoryList.map((e) {
+      //todo 第二层渲染 需要声明类型 泛型 避免 type 'List<dynamic>' is not a subtype of type 'List<Widget>'
+      tabs: notifier.categoryList.map<Widget>((e) {
         return Tab(
           child: Text(e.name),
         );
@@ -64,7 +62,7 @@ class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin
   Widget tabBarView(notifier) {
     return TabBarView(
       controller: notifier.tabController,
-      children: notifier.categoryList.map((e) {
+      children: notifier.categoryList.map<Widget>((e) {
         return ProjectInfoPage(e.id);
       }).toList(),
     );

@@ -7,12 +7,12 @@ class ProjectNotifier extends ChangeNotifier{
   var _categoryList = [];
   var tabController;
 
-  ProjectNotifier(ctx){
-    tabController = TabController(vsync: ctx, length: _categoryList.length);
+  ProjectNotifier(tickerProvider){
+    tabController = TabController(vsync: tickerProvider, length: _categoryList.length);
     HttpManager().getProject(
         success: (data) {
           _categoryList = data;
-          tabController = TabController(vsync: ctx, length: _categoryList.length);
+           tabController = TabController(vsync: tickerProvider, length: _categoryList.length);
           notifyListeners();
         },
         fail: (errorCode, msg) {});

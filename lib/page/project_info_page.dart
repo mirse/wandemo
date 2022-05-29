@@ -1,39 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:wandemo/controller/project_info_controller.dart';
+import 'package:wandemo/notifier/project_info_notifier.dart';
 
 class ProjectInfoPage extends StatelessWidget {
     final int cid;
-    late ProjectInfoController controller;
+    //late ProjectInfoController controller;
 
     ProjectInfoPage(this.cid){
-       Get.put<ProjectInfoController>(ProjectInfoController(),tag: cid.toString());
-       controller =Get.find<ProjectInfoController>(tag: cid.toString());
-       controller.getArticle(cid, 0);
+       // Get.put<ProjectInfoController>(ProjectInfoController(),tag: cid.toString());
+       // controller =Get.find<ProjectInfoController>(tag: cid.toString());
+       // controller.getArticle(cid, 0);
     }
 
 
   @override
   Widget build(BuildContext context) {
-    return Obx((){
-      return Container(
-          padding: EdgeInsets.all(3),
-          child: GridView.count(
-            controller: controller.scrollController,
-            crossAxisCount: 2,
-            children:_gridItemList,
-            childAspectRatio: 3/4,//宽高比
-            mainAxisSpacing: 5.0,//纵轴间隙
-            crossAxisSpacing: 5.0,//横轴间隙
-          )
-      );
-    });
+    return ChangeNotifierProvider(
+        create: (ctx) => ProjectInfoNotifier(cid),
+        child: Consumer<ProjectInfoNotifier>(
+          builder: (BuildContext context, value, Widget? child) {
+            return Container(
+                padding: EdgeInsets.all(3),
+                child: GridView.count(
+                  controller: value.scrollController,
+                  crossAxisCount: 2,
+                  children:gridItemList(context,value),
+                  childAspectRatio: 3/4,//宽高比
+                  mainAxisSpacing: 5.0,//纵轴间隙
+                  crossAxisSpacing: 5.0,//横轴间隙
+                )
+            );
+          },
+        ),
+    );
   }
 
 
 
-  get _gridItemList{
-    List<Widget> list = controller.projectInfoList.map((e){
+  List<Widget> gridItemList(ctx,projectInfoNotifier){
+    List<Widget> list = projectInfoNotifier.projectInfoList.map<Widget>((e){
       return GestureDetector(
         child: Card(
             child: ClipRRect(
@@ -60,10 +67,10 @@ class ProjectInfoPage extends StatelessWidget {
             )
         ),
         onTap: (){
-          Get.toNamed('/articleInfo',arguments: {'link':e.link,'title':e.title});
-          // Navigator.of(context).pushNamed('/articleInfo',
-          //     arguments: {'link':e.link,'title':e.title}
-          // );
+          // Get.toNamed('/articleInfo',arguments: {'link':e.link,'title':e.title});
+          Navigator.of(ctx).pushNamed('/articleInfo',
+              arguments: {'link':e.link,'title':e.title}
+          );
         },
       );
     }).toList();

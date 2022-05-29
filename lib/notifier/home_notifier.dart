@@ -27,6 +27,7 @@ class HomeNotifier extends ChangeNotifier{
 
 
   HomeNotifier(this.ctx){
+    print('HomeNotifier build');
     _articlePage = 0;
     getArticle();
     getBanner();

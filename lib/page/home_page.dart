@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
   };
   @override
   Widget build(BuildContext context) {
+    print('HomePage build');
     return ChangeNotifierProvider(
       create: (ctx) => HomeNotifier(context),
       child: Consumer<HomeNotifier>(
