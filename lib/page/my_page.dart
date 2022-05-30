@@ -1,24 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:wandemo/notifier/app_notifier.dart';
 import 'package:wandemo/utils/toast_utils.dart';
-
-import '../controller/app_controller.dart';
+import '../generated/l10n.dart';
 import '../utils/global.dart';
 
-class MyPage extends GetView<AppController> {
+class MyPage extends StatelessWidget {
   final picker = ImagePicker();
+  late AppNotifier notifier;
+
   @override
   Widget build(BuildContext context) {
-    return Obx((){
-      return Container(
-        child: Column(
+    notifier = Provider.of<AppNotifier>(context,listen: true);
+    return Scaffold(
+        body: Column(
           children: [
             _headerWidget(context),
             Container(
-              margin: EdgeInsets.only(left: 15, right: 15),
+              margin: EdgeInsets.only(left: 15.w, right: 15.w),
               decoration: BoxDecoration(
                   color: Theme
                       .of(context)
@@ -28,39 +31,58 @@ class MyPage extends GetView<AppController> {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text('collect'.tr, style: Get.textTheme.bodyText1,),
+                    title: Text(S
+                        .of(context)
+                        .collect, style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1,),
                     leading: Image.asset(
-                      'assets/imgs/ic_zan.png', width: 30, height: 30,),),
+                      'assets/imgs/ic_zan.png', width: 30.w, height: 30.w,),),
                   Divider(),
-                  ListTile(title: Text('rank'.tr, style: Get.textTheme.bodyText1),
+                  ListTile(title: Text(S
+                      .of(context)
+                      .rank, style: Theme
+                      .of(context)
+                      .textTheme
+                      .bodyText1),
                     leading: Image.asset(
-                      'assets/imgs/ic_rank.png', width: 30, height: 30,),),
+                      'assets/imgs/ic_rank.png', width: 30.w, height: 30.w,),),
                   Divider(),
                   ListTile(
-                    title: Text('setting'.tr, style: Get.textTheme.bodyText1),
+                    title: Text(S
+                        .of(context)
+                        .setting, style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1),
                     leading: Image.asset(
-                      'assets/imgs/ic_setting.png', width: 30, height: 30,),
+                      'assets/imgs/ic_setting.png', width: 30.w, height: 30.w,),
                     onTap: () => Navigator.pushNamed(context, '/setting'),
                   ),
                   Divider(),
                   ListTile(
-                    title: Text('about'.tr, style: Get.textTheme.bodyText1),
+                    title: Text(S
+                        .of(context)
+                        .about, style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1),
                     leading: Image.asset(
-                      'assets/imgs/ic_about.png', width: 30, height: 30,),),
+                      'assets/imgs/ic_about.png', width: 30.w, height: 30.w,),),
 
                 ],
               ),
             )
           ],
         ),
-      );
-    });
+    );
   }
 
   Widget _headerWidget(context) {
     return Container(
-      margin: EdgeInsets.all(15),
-      height: 200,
+      margin: EdgeInsets.all(15.w),
+      height: 200.h,
       width: double.infinity,
       //color: Colors.blueAccent,
       decoration: BoxDecoration(
@@ -74,23 +96,23 @@ class MyPage extends GetView<AppController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ClipOval(
-              child: appController.mIconPath.isEmpty?Image.asset(
+              child: notifier.mIconPath.isEmpty ? Image.asset(
                 'assets/imgs/default_avatar.png',
-                width: 100,
-                height: 100,
+                width: 100.w,
+                height: 100.w,
                 fit: BoxFit.cover,
-              ):
+              ) :
               Image.file(
-                File(appController.mIconPath),
-                width: 100,
-                height: 100,
+                File(notifier.mIconPath),
+                width: 100.w,
+                height: 100.w,
                 fit: BoxFit.cover,
               ),
 
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20.h,),
             Text(
-              appController.isLogin
+              notifier.isLogin
                   ? (Global.loginInfoModel == null
                   ? 'admin'
                   : Global.loginInfoModel!.nickname)
@@ -110,10 +132,14 @@ class MyPage extends GetView<AppController> {
   }
 
   void _setUserIcon(context) {
-    if (appController.isLogin) {
-      Get.bottomSheet(
-        Container(
-          height: 200,
+    if (notifier.isLogin) {
+      Scaffold.of(context).showBottomSheet((context){
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft:Radius.circular(10),topRight:Radius.circular(10)),
+            color: Colors.grey.shade300
+          ),
+          height: 200.h,
           child: Column(
             children: [
               ListTile(
@@ -122,7 +148,7 @@ class MyPage extends GetView<AppController> {
                     .textTheme
                     .bodyText1,),
                 onTap: () {
-                  _takePhoto();
+                  _takePhoto(context);
                 },
               ),
               Divider(),
@@ -132,7 +158,7 @@ class MyPage extends GetView<AppController> {
                     .textTheme
                     .bodyText1,),
                 onTap: () {
-                  _selectPhoto();
+                  _selectPhoto(context);
                 },
               ),
               Divider(),
@@ -142,51 +168,52 @@ class MyPage extends GetView<AppController> {
                     .textTheme
                     .bodyText1,),
                 onTap: () {
-                  Get.back();
+                  Navigator.pop(context);
                 },
               )
             ],
           ),
-        ),
-        backgroundColor: Colors.white,
-      );
+        );
+      });
     }
     else {
-      ToastUtils.showMyToast('login_first'.tr);
+      ToastUtils.showMyToast(S
+          .of(context)
+          .login_first);
     }
   }
 
-  Future _selectPhoto() async {
+  Future _selectPhoto(ctx) async {
     final pickedFile = await picker.pickImage(
       // 拍照获取图片
       // source: ImageSource.camera,
       // 手机选择图库
         source: ImageSource.gallery,
         // 图片的最大宽度
-        maxWidth: 400
+        maxWidth: 400.w
     );
     var path = pickedFile?.path;
-    if(path != null){
+    if (path != null) {
       Global.saveIconPath(path);
-      appController.setIconPath(path);
+      notifier.setIconPath(path);
     }
-    Get.back();
+    Navigator.pop(ctx);
   }
 
-  Future _takePhoto() async {
+  Future _takePhoto(ctx) async {
     final pickedFile = await picker.pickImage(
       // 拍照获取图片
       // source: ImageSource.camera,
       // 手机选择图库
         source: ImageSource.camera,
         // 图片的最大宽度
-        maxWidth: 400
+        maxWidth: 400.w
     );
     var path = pickedFile?.path;
-    if(path != null){
+    if (path != null) {
       Global.saveIconPath(path);
-      appController.setIconPath(path);
+      notifier.setIconPath(path);
     }
-    Get.back();
+    Navigator.pop(ctx);
   }
 }

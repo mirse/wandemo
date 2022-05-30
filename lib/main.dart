@@ -10,9 +10,10 @@ import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:wandemo/controller/app_controller.dart';
 import 'package:wandemo/http/http_manager.dart';
 import 'package:wandemo/messages.dart';
+import 'package:wandemo/notifier/app_notifier.dart';
+import 'package:wandemo/notifier/home_notifier.dart';
 import 'package:wandemo/notifier/login_notifier.dart';
 import 'package:wandemo/notifier/setting_notifier.dart';
 import 'package:wandemo/page/home_page.dart';
@@ -21,6 +22,7 @@ import 'package:wandemo/page/my_page.dart';
 import 'package:wandemo/page/project_page.dart';
 import 'package:wandemo/page/setting_page.dart';
 import 'package:wandemo/page/sort_page.dart';
+import 'package:wandemo/page/splash_page.dart';
 import 'package:wandemo/route.dart';
 import 'package:wandemo/utils/app_theme.dart';
 import 'package:wandemo/utils/global.dart';
@@ -28,7 +30,6 @@ import 'package:wandemo/utils/permission_utils.dart';
 import 'package:wandemo/utils/toast_utils.dart';
 import 'package:wandemo/widget/dialog_widget.dart';
 
-import 'controller/login_controller.dart';
 import 'generated/l10n.dart';
 import 'http/dio_manager.dart';
 
@@ -43,6 +44,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<SettingNotifier>(create: (ctx) => SettingNotifier()),
+      ChangeNotifierProvider<AppNotifier>(create: (ctx) => AppNotifier()),
+      ChangeNotifierProvider<HomeNotifier>(create: (ctx) => HomeNotifier(ctx)),
     ],
     child: MyApp(),
   ));
@@ -57,6 +60,7 @@ void main() async {
     //       SystemUiOverlay.bottom, SystemUiOverlay.top
     //     ]);
   }
+
 }
 
 void _requestPermission(){
@@ -88,7 +92,7 @@ class MyApp extends StatelessWidget {
                         title: 'Flutter Demo',
                         //routes: routes,
                         //initialRoute: '/',
-                        home: MainPage(),
+                        home: SplashPage(),
                         locale:
                         local.local,
                         // Global.getLanguage() == 0 ? Locale("zh", "CN") : Locale("en", "US"),
@@ -111,41 +115,6 @@ class MyApp extends StatelessWidget {
                   }),
             )
         ));
-
-    return ScreenUtilInit(
-        designSize: Size(360, 640),
-        builder: (ctx, widget) => OKToast(
-            child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: MaterialApp(
-                    // debugShowCheckedModeBanner: false,
-                    // title: 'Flutter Demo',
-                    // //home: MainPage(),
-                    // initialRoute: '/login',
-                    // //与home选其一
-                    // //routes:routes,
-                    // //getPages: pages,
-                    // locale: Global.getLanguage() == 0
-                    //     ? Locale("zh", "CN")
-                    //     : Locale("en", "US"),
-                    // localizationsDelegates: [
-                    //   AppLocalizations.delegate, //
-                    //   GlobalMaterialLocalizations.delegate,
-                    //   GlobalWidgetsLocalizations.delegate,
-                    //   GlobalCupertinoLocalizations.delegate,
-                    // ],
-                    // supportedLocales: [
-                    //   Locale('en', ''), // English, no country code
-                    //   Locale('zh', ''), // Spanish, no country code
-                    // ],
-                    // onGenerateRoute: onGenerateRoute, //当routes不配置走onGenerateRoute
-                    // darkTheme: darkTheme,
-                    // themeMode: ThemeMode.light,
-                    // theme:
-                    //     Global.getIfLightTheme() == true ? lightTheme : darkTheme,
-                    ))));
   }
 }
 
@@ -192,7 +161,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           child: ListView(
         padding: EdgeInsets.zero, // 此处能解决顶部为灰色的问题
         children: [
-          _drawerHeader,
+          drawerHeader(),
           ListTile(
             textColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
             iconColor: curIndex == 0 ? Colors.blueAccent : Colors.grey,
@@ -247,7 +216,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         ],
       ));
 
-  get _drawerHeader => Obx(() {
+  Widget drawerHeader(){
+    return Consumer<AppNotifier>(
+      builder: (BuildContext context, appNotifier, Widget? child) {
         return DrawerHeader(
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor, //设置顶部背景颜色或图片
@@ -256,31 +227,31 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           child: GestureDetector(
             //点击事件
             child: Container(
-              margin: EdgeInsets.only(left: 15),
+              margin: EdgeInsets.only(left: 15.w),
               child: Row(
                 children: [
                   ClipOval(
-                    child: appController.mIconPath.isEmpty
+                    child: appNotifier.mIconPath.isEmpty
                         ? Image.asset(
-                            'assets/imgs/default_avatar.png',
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                          )
+                      'assets/imgs/default_avatar.png',
+                      width: 70.w,
+                      height: 70.w,
+                      fit: BoxFit.cover,
+                    )
                         : Image.file(
-                            File(appController.mIconPath),
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                          ),
+                      File(appNotifier.mIconPath),
+                      width: 70.w,
+                      height: 70.w,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 20),
+                    margin: EdgeInsets.only(left: 20.w),
                     child: Text(
-                      appController.isLogin
+                      appNotifier.isLogin
                           ? (Global.loginInfoModel == null
-                              ? 'admin'
-                              : Global.loginInfoModel!.nickname)
+                          ? 'admin'
+                          : Global.loginInfoModel!.nickname)
                           : 'admin',
                       style: Theme.of(context).textTheme.headline1,
                     ),
@@ -290,7 +261,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             ),
             onTap: () {
               //点击drawer首栏
-              if (!appController.isLogin) {
+              if (!appNotifier.isLogin) {
                 Navigator.pushNamed(context, '/login');
               } else {
                 showDialog(context: context, builder: (_){
@@ -304,8 +275,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       HttpManager().loginOut(success: (data) {
                         ToastUtils.showMyToast(S.of(context).logout_success);
                         Global.clearUserInfo();
+                        Global.clearIconPath();
                         DioManager().clearCookieJar();
-                        appController.setLoginState(LoginState.LOGIN_OUT);
+                        appNotifier.setLoginState(LoginState.LOGIN_OUT);
+                        appNotifier.setIconPath(Global.iconPath);
                         LoadingDialog.dismissDialog(context);
                       }, fail: (errorCode, msg) {
                         ToastUtils.showMyToast(S.of(context).logout_fail);
@@ -320,7 +293,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             },
           ),
         );
-      });
+      },
+
+    );
+  }
 
   get _bottomNavigationBar => BottomNavigationBar(
         currentIndex: curIndex,

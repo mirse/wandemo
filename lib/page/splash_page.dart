@@ -23,6 +23,7 @@ class _SplashPageState extends State<SplashPage>
   late AnimationController animationController;
   late Animation<double> _rotateAnimation;
   var _timeOut;
+  late Timer timer;
 
   @override
   void initState() {
@@ -51,10 +52,11 @@ class _SplashPageState extends State<SplashPage>
 
     animationController.repeat(reverse: true);
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       _timeOut--;
       if (_timeOut <= 0) {
-        Get.offNamed('/home');
+        Navigator.pushReplacementNamed(context, '/home');
+        // Get.offNamed('/home');
       } else {
         if(mounted){ //Unhandled Exception: setState() called after dispose(): _SplashPageState#42d37(lifecycle state: defunct, not mounted, ticker inactive
           setState(() {});
@@ -89,15 +91,16 @@ class _SplashPageState extends State<SplashPage>
                   margin: EdgeInsets.only(top:ScreenUtil().statusBarHeight  ,right: 10.w),
                   child: TextButton(
                     onPressed: () {
-                      Get.offNamed('/home');
+                      Navigator.pushReplacementNamed(context, '/home');
+                      // Get.offNamed('/home');
                     },
                     child: Container(
                       width: 80.w,
                       child: Row(
                         children: [
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10.w,),
                           Text("${_timeOut}s"),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10.w,),
                           Text('Skip',style: TextStyle(color: Colors.black),)
                         ],
                       ),
@@ -110,7 +113,7 @@ class _SplashPageState extends State<SplashPage>
                       shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18))),
-                      minimumSize: MaterialStateProperty.all(Size(60, 40)),
+                      minimumSize: MaterialStateProperty.all(Size(60.w, 40.h)),
                     ),
                   ),
                 ))
@@ -123,6 +126,7 @@ class _SplashPageState extends State<SplashPage>
   @override
   void dispose() {
     animationController.dispose();
+    timer.cancel();
     super.dispose();
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:wandemo/controller/project_info_controller.dart';
 import 'package:wandemo/notifier/project_info_notifier.dart';
 
 class ProjectInfoPage extends StatelessWidget {
@@ -27,7 +26,7 @@ class ProjectInfoPage extends StatelessWidget {
                   controller: value.scrollController,
                   crossAxisCount: 2,
                   children:gridItemList(context,value),
-                  childAspectRatio: 3/4,//宽高比
+                  childAspectRatio: 3/4.5,//宽高比
                   mainAxisSpacing: 5.0,//纵轴间隙
                   crossAxisSpacing: 5.0,//横轴间隙
                 )
@@ -47,14 +46,14 @@ class ProjectInfoPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: Column(
                 children: [
-                  Image.network(e.envelopePic,height: 150,width:double.infinity,fit: BoxFit.cover,),
-                  SizedBox(height: 5,),
+                  Image.network(e.envelopePic,height: 150.h,width:double.infinity,fit: BoxFit.cover,),
+                  SizedBox(height: 5.h,),
                   Container(
                     margin: EdgeInsets.all(5),
                     child: Column(
                       children: [
                         Text(e.desc,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.bold),),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 5.h,),
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text('Author:${e.author}',maxLines: 1,overflow: TextOverflow.ellipsis,),

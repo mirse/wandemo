@@ -1,14 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:sp_util/sp_util.dart';
+
 
 import '../generated/l10n.dart';
 import '../http/http_manager.dart';
 import '../model/banner_model.dart';
-import '../utils/app_theme.dart';
-import '../utils/global.dart';
 import '../utils/toast_utils.dart';
 import '../widget/dialog_widget.dart';
 
@@ -49,8 +45,9 @@ class HomeNotifier extends ChangeNotifier{
   void getBanner(){
     HttpManager().getBanner<BannerModel>(success:(data){
       httpImg = data;
+      print('getBanner success');
     },fail: (errorCode,msg){
-
+      print('getBanner fail');
     });
     notifyListeners();
   }

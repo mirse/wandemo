@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../generated/l10n.dart';
+
 typedef OnSure();
 typedef OnCancel();
 
@@ -167,7 +169,7 @@ class LoadingDialog extends StatelessWidget {
                 height: 40,
               ),
               SizedBox(height: 10),
-              Text('loading'.tr)
+              Text(S.of(context).loading)
             ],
           ),
         ),

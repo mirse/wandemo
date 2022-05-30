@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:wandemo/notifier/project_notifier.dart';
 import 'package:wandemo/page/project_info_page.dart';
@@ -18,7 +19,6 @@ class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin
 
     return ChangeNotifierProvider(
       create: (ctx){
-        print('ProjectNotifier build');
         return ProjectNotifier(this);
       },
       child: Consumer<ProjectNotifier>(
@@ -54,8 +54,8 @@ class _ProjectPageState extends State<ProjectPage> with TickerProviderStateMixin
         );
       }).toList(),
       indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(color: Colors.blue, width: 3),
-          insets: EdgeInsets.only(left: 15, right: 15)),
+          borderSide: BorderSide(color: Colors.blue, width: 3.w),
+          insets: EdgeInsets.only(left: 15.w, right: 15.w)),
     );
   }
 

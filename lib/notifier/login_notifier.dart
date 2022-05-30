@@ -1,8 +1,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../controller/app_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:wandemo/notifier/app_notifier.dart';
 import '../generated/l10n.dart';
 import '../http/http_manager.dart';
 import '../utils/global.dart';
@@ -55,7 +55,7 @@ class LoginNotifier extends ChangeNotifier{
         ),
         success: (data){
           Global.saveUserInfo(data);
-          appController.setLoginState(LoginState.LOGIN);
+          Provider.of<AppNotifier>(ctx,listen: false).setLoginState(LoginState.LOGIN);
           LoadingDialog.dismissDialog(ctx);
           ToastUtils.showMyToast(S.of(ctx).login_success);
           Navigator.pop(ctx);
